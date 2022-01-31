@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Btest</title>
+</head>
+<body>
+    <h1>Hello</h1>
+    <p id="testOut">Nothing yet</p>
+    <button id="testBtn" onclick="myFunction()">Connect d1</button>
+    <button id="testBtn2" onclick="connectFunc2()">Connect d2</button>
+    <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
+</body>
+
+</html>
+<script type="text/javascript">
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    
+    class BLEDevice {
+
+        device;
+
+        set deviceDetails(inDevice) {
+
+            this.device = inDevice;
+
+        }
+
+        /*constructor(inDevice) {
+
+            this.device = inDevice;
+        }*/
+
+        async startConnection() {
+
+            const server = await this.device.gatt.connect();
+            return server;
+        }
+
+        async disConnectDevice() {
+
+            await gattDisconnect(this.device);
+        }
+
+        connectionDetails() {
+
+            return isConnected(this.device);
+
+        }
+
+    }
+
+    const device = new BLEDevice();
+    const device2 = new BLEDevice();
+
+
+    async function myFunction(){
+
+        
+        device.deviceDetails=await getDevice();
+        console.info(typeof device)
+        console.info(device);
+        const server = await device.startConnection();
+        const services = await getPrimaryServices(server);
+        console.info(services);
+        await delay(5000);
+        device.disConnectDevice();
+        console.info(device.connectionDetails());
+        await delay(5000);
+        const serverRe = await device.startConnection();
+        console.info(device.connectionDetails());
+        
+
+        //device
+    }
+
+    
+
+    async function connectFunc2() {
+        device2.deviceDetails = await getDevice();
+        console.info(typeof device2)
+        console.info(device2);
+        console.info("here");
+        const server = await device2.startConnection();
+        const services = await getPrimaryServices(server);
+        console.info(services);
+        console.info(device2.connectionDetails());
+
+
+    }
+
+    async function testConnectBtn() {
+        console.info("D1");
+        console.info(device.connectionDetails());
+        console.info("D2");
+        console.info(device2.connectionDetails());
+    }
+
+
+    function isConnected(device) {
+        //if (!exists(device.gatt)) return false;
+        return device.gatt.connected;
+    }
+
+    async function getDevice(){
+
+        return navigator.bluetooth.requestDevice({
+            /*acceptAllDevices: true*/
+            filters: [{ services: ['00001818-0000-1000-8000-00805f9b34fb'] }], optionalServices: ['battery_service']
+        });
+        
+    }
+    async function gattConnect(device) {
+
+        const server = await device.gatt.connect();
+        return server;
+    }
+    async function gattDisconnect(device) {
+        const self = this;
+        return await device.gatt.disconnect();
+    }
+    /*hasService(device, uuid) {
+        let res = false;
+        for (let service of device.services) {
+            if (service.uuid === uuid) res = true;
+        }
+        return res;
+    }*/
+    async function getPrimaryServices(server) {
+        const self = this;
+        const services = await server.getPrimaryServices();
+        return services;
+    }
+
+</script>

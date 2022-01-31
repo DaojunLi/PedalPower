@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django.template import *
 
 from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the pedal power display index.")
+    return render(request, 'ppdisplay/index.html', {})
