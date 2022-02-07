@@ -37,9 +37,35 @@
 
         device;
 
-        set deviceDetails(inDevice) {
+        async deviceDetails() {
 
-            this.device = inDevice;
+            await navigator.bluetooth.requestDevice({
+                /*acceptAllDevices: true*/
+                filters: [{ services: ['00001818-0000-1000-8000-00805f9b34fb'] }], optionalServices: ['battery_service']
+            })
+                .then(device => {
+                    this.device = device;
+                    return this.device.gatt.connect();
+                })
+                .then(server => {
+                    // Getting service
+                    console.info("getting service")
+                    return server.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
+                }).then(service => {
+                    // Getting Characteristic…
+                    console.info("getting characteristic")
+                    return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
+                }).then(characteristic => characteristic.startNotifications())
+                .then(characteristic => {
+                    // Set up event listener for when characteristic value changes.
+                    console.info("setting up listener")
+                    characteristic.addEventListener('characteristicvaluechanged',
+                        testchange);
+                    // Reading value
+                    console.info("Reading value")
+                    //return characteristic.readValue();
+                }).catch(error => { console.error(error); });
+            console.info("Done")
 
         }
 
@@ -50,8 +76,36 @@
 
         async startConnection() {
 
-            const server = await this.device.gatt.connect();
-            return server;
+            console.info(device);
+            await this.device.gatt.connect()
+                .then(reserver => {
+                    console.info(reserver);
+                    console.info("getting service");
+                    return reserver.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
+                }).then(service => {
+                // Getting Characteristic…
+                console.info(service)
+                return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
+            }).then(characteristic => characteristic.startNotifications())
+            .then(characteristic => {
+                // Set up event listener for when characteristic value changes.
+                console.info("setting up listener")
+
+                characteristic.addEventListener('characteristicvaluechanged',
+                    testchange);
+
+                // Reading value
+                console.info("Reading value")
+                //return characteristic.readValue();
+            }).catch(error => { console.error(error); });
+            console.info("Done");
+
+        }
+
+        delay(n) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, n * 1000);
+            });
         }
 
         async disConnectDevice() {
@@ -74,40 +128,11 @@
     async function myFunction(){
 
         
-        device.deviceDetails = await getDevice()
+        await device.deviceDetails();
         console.info(typeof device)
         //console.info(device);
-        await device.startConnection().then(server => {
-            // Getting service
-            console.info("getting service")
-            return server.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
-        }).then(service => {
-                // Getting Characteristic…
-            console.info("getting characteristic")
-                return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
-        }).then(characteristic => characteristic.startNotifications())
-            .then(characteristic => {
-                // Set up event listener for when characteristic value changes.
-                console.info("setting up listener")
-                characteristic.addEventListener('characteristicvaluechanged',
-                    testchange);
-                // Reading value
-                console.info("Reading value")
-                //return characteristic.readValue();
-            }).catch(error => { console.error(error); });
-        console.info("Done")
-        //const service = await getPrimaryServices(server);
-        //console.info(service);
-        //console.info(getMethods(services));
-        //const characteristic = await service.getCharacteristics('00001818-0000-1000-8000-00805f9b34fb');
-        //characteristic.addEventListener('characteristicvaluechanged' , testchange)
-        let btn = document.createElement("button");
-        btn.innerHTML = "Submit";
-        btn.type = "submit";
-        btn.name = "formBtn";
-        document.body.appendChild(btn);
+        console.info(device.connectionDetails());
 
-        //device
     }
 
     function start() {
