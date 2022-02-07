@@ -11,10 +11,26 @@
     <button id="testBtn" onclick="myFunction()">Connect d1</button>
     <button id="testBtn2" onclick="connectFunc2()">Connect d2</button>
     <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
+    <button id="startBtn" onclick="start()">Start</button>
+    <div></div>
+    <div id="div test" style="display:none">
+        <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
+        <button id="Btn2" style="display: block">Hard - Toasting Bread</button>
+        <button id="Btn3" style="display: block">Impossible - Boiling A Kettle</button>
+    </div>
+    <div id="divInstr" style="display:none">
+
+        <p>test</p>
+
+    </div>
+
 </body>
 
 </html>
 <script type="text/javascript">
+    var lvlselected = 0;
+    var noBikes = 1;
+    var modeSelected = 0;
     const delay = ms => new Promise(res => setTimeout(res, ms));
     
     class BLEDevice {
@@ -58,24 +74,158 @@
     async function myFunction(){
 
         
-        device.deviceDetails=await getDevice();
+        device.deviceDetails = await getDevice()
         console.info(typeof device)
-        console.info(device);
-        const server = await device.startConnection();
-        const services = await getPrimaryServices(server);
-        console.info(services);
-        await delay(5000);
-        device.disConnectDevice();
-        console.info(device.connectionDetails());
-        await delay(5000);
-        const serverRe = await device.startConnection();
-        console.info(device.connectionDetails());
-        
+        //console.info(device);
+        await device.startConnection().then(server => {
+            // Getting service
+            console.info("getting service")
+            return server.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
+        }).then(service => {
+                // Getting Characteristic…
+            console.info("getting characteristic")
+                return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
+        }).then(characteristic => characteristic.startNotifications())
+            .then(characteristic => {
+                // Set up event listener for when characteristic value changes.
+                console.info("setting up listener")
+                characteristic.addEventListener('characteristicvaluechanged',
+                    testchange);
+                // Reading value
+                console.info("Reading value")
+                //return characteristic.readValue();
+            }).catch(error => { console.error(error); });
+        console.info("Done")
+        //const service = await getPrimaryServices(server);
+        //console.info(service);
+        //console.info(getMethods(services));
+        //const characteristic = await service.getCharacteristics('00001818-0000-1000-8000-00805f9b34fb');
+        //characteristic.addEventListener('characteristicvaluechanged' , testchange)
+        let btn = document.createElement("button");
+        btn.innerHTML = "Submit";
+        btn.type = "submit";
+        btn.name = "formBtn";
+        document.body.appendChild(btn);
 
         //device
     }
 
-    
+    function start() {
+
+        document.getElementById("div test").style.display = "block";
+
+        for (i = 1; i < 4; i++) {
+
+            btnId = "Btn" + i.toString();
+            console.info(btnId);
+            document.getElementById(btnId).style.display = "block";
+
+        }
+
+        document.getElementById("Btn1").innerHTML = "Easy - Light Bulbs";
+        document.getElementById("Btn2").innerHTML = "Hard - Toasting Bread";
+        document.getElementById("Btn3").innerHTML = "Impossible - Boiling A Kettle";
+
+        document.getElementById("Btn1").onclick = function () {
+            lvlselected = 1;
+            
+            console.info("Selected: 1");
+            selectBikes();
+        };
+        document.getElementById("Btn2").onclick = function () {
+            lvlselected = 2;
+            console.info("Selected: 2");
+            selectBikes();
+        };
+        document.getElementById("Btn3").onclick = function () {
+            lvlselected = 3;
+            console.info("Selected: 3");
+            selectBikes();
+        };
+    }
+
+    function selectBikes() {
+
+        document.getElementById("Btn3").style.display = "none";
+
+        for (i = 1; i < 3; i++) {
+
+            btnId = "Btn" + i.toString();
+            console.info(btnId);
+            document.getElementById(btnId).style.display = "inline";
+
+        }
+
+        document.getElementById("Btn1").innerHTML = "1";
+        document.getElementById("Btn2").innerHTML = "2";
+
+        document.getElementById("Btn1").onclick = function () {
+            noBikes = 1;
+            modeSelected = 0;
+            console.info("Selected bikes: 1");
+
+        };
+        document.getElementById("Btn2").onclick = function () {
+            noBikes = 2;
+            console.info("Selected bikes: 2");
+            selectMode();
+        };
+    };
+
+    function selectMode() {
+
+        for (i = 1; i < 4; i++) {
+
+            btnId = "Btn" + i.toString();
+            console.info(btnId);
+            document.getElementById(btnId).style.display = "block";
+
+        }
+
+        document.getElementById("Btn1").innerHTML = "Co-operative";
+        document.getElementById("Btn2").innerHTML = "Competitive";
+        document.getElementById("Btn3").innerHTML = "Co-opetition - Same goals but competitive";
+
+        document.getElementById("Btn1").onclick = function () {
+            modeSelected = 1;
+
+            console.info("Selected: co-op");
+            dispInstructions();
+
+        };
+        document.getElementById("Btn2").onclick = function () {
+            modeSelected = 2;
+
+            console.info("Selected: comp");
+        };
+        document.getElementById("Btn3").onclick = function () {
+            modeSelected = 3;
+
+            console.info("Selected: co-opetition");
+        };
+
+    }
+
+
+
+    function startGame() {
+
+
+
+    }
+
+    function dispInstructions() {
+
+        document.getElementById("div test").style.display = "none";
+        document.getElementById("divInstr").style.display = "block";
+
+    }
+
+    function testchange(event) {
+        console.info("pwr event")
+        const testvalue = event.target.value.getUint8(0);
+        console.info('Power is ' + testvalue);
+    }
 
     async function connectFunc2() {
         device2.deviceDetails = await getDevice();
@@ -129,8 +279,22 @@
     }*/
     async function getPrimaryServices(server) {
         const self = this;
-        const services = await server.getPrimaryServices();
+        const services = await server.getPrimaryServices('00001818-0000-1000-8000-00805f9b34fb');
         return services;
+    }
+
+    function getMethods(obj) {
+        var result = [];
+        for (var id in obj) {
+            try {
+                if (typeof (obj[id]) == "function") {
+                    result.push(id + ": " + obj[id].toString());
+                }
+            } catch (err) {
+                result.push(id + ": inaccessible");
+            }
+        }
+        return result;
     }
 
 </script>
