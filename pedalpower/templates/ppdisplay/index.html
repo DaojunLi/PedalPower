@@ -23,6 +23,12 @@
         <p>test</p>
 
     </div>
+    <div id="bulbs" style="display: none">
+
+        <img id ="1led"src="images/LED.PNG" alt="led" />
+
+
+    </div>
 
 </body>
 
@@ -32,6 +38,8 @@
     var noBikes = 1;
     var modeSelected = 0;
     const delay = ms => new Promise(res => setTimeout(res, ms));
+    var inGame = false;
+    var curBulbs = 1;
     
     class BLEDevice {
 
@@ -133,6 +141,17 @@
         //console.info(device);
         console.info(device.connectionDetails());
 
+        let btn = document.createElement("button");
+        btn.innerHTML = "Reconect Bike 1";
+        btn.type = "submit";
+        btn.name = "formBtn";
+        btn.onclick = function () {
+
+            device.startConnection();
+
+        };
+        document.body.appendChild(btn);
+
     }
 
     function start() {
@@ -188,6 +207,7 @@
             noBikes = 1;
             modeSelected = 0;
             console.info("Selected bikes: 1");
+            startGame();
 
         };
         document.getElementById("Btn2").onclick = function () {
@@ -235,6 +255,9 @@
 
     function startGame() {
 
+        console.info("test");
+        document.getElementById("bulbs").style.display = "block";
+        inGame = true;
 
 
     }
@@ -248,8 +271,31 @@
 
     function testchange(event) {
         console.info("pwr event")
-        const testvalue = event.target.value.getUint8(0);
-        console.info('Power is ' + testvalue);
+        //const testvalue = event.target.value.getUint8(0);
+        power = event.target.value.getInt8(2);
+        console.info('Power is ' + event.target.value.getInt8(2));
+        if (inGame) {
+
+            bulbs = Math.ceil(power / 6);
+
+            if (curBulbs < bulbs) {
+
+                var newBulbs = bulbs - curBulbs;
+
+                for (i = 0; i < newBulbs; i++) {
+
+                    let newLed = document.createElement("img");
+                    newLed.id = i.toString() + "led";
+                    newLed.src = "images/LED.PNG";
+                    document.getElementById("bulbs").appendChild(newLed);
+
+                }
+
+                curBulbs = bulbs;
+
+            }
+
+        }
     }
 
     async function connectFunc2() {
