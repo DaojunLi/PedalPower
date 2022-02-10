@@ -8,11 +8,13 @@
 <body>
     <h1>Hello</h1>
     <p id="testOut">Nothing yet</p>
-    <button id="testBtn" onclick="myFunction()">Connect d1</button>
-    <button id="testBtn2" onclick="connectFunc2()">Connect d2</button>
+    <button id="testBtn" onclick="connectBike(1)">Connect d1</button>
+    <button id="testBtn2" onclick="connectBike(2)">Connect d2</button>
     <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
     <button id="startBtn" onclick="start()">Start</button>
-    <div></div>
+    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
+    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 2</button>
+    <div id="ReconnectArea"></div>
     <div id="div test" style="display:none">
         <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
         <button id="Btn2" style="display: block">Hard - Toasting Bread</button>
@@ -25,7 +27,7 @@
     </div>
     <div id="bulbs" style="display: none">
 
-        <img id ="1led"src="images/LED.PNG" alt="led" />
+        <img id="1led" src="images/LED.PNG" alt="led" />
 
 
     </div>
@@ -45,7 +47,7 @@
 
         device;
 
-        async deviceDetails() {
+        async deviceDetails(BikeNo) {
 
             await navigator.bluetooth.requestDevice({
                 /*acceptAllDevices: true*/
@@ -68,7 +70,8 @@
                     // Set up event listener for when characteristic value changes.
                     console.info("setting up listener")
                     characteristic.addEventListener('characteristicvaluechanged',
-                        testchange);
+                        function () {
+                            testchange(event, BikeNo);});
                     // Reading value
                     console.info("Reading value")
                     //return characteristic.readValue();
@@ -82,7 +85,7 @@
             this.device = inDevice;
         }*/
 
-        async startConnection() {
+        async startConnection(BikeNo) {
 
             console.info(device);
             await this.device.gatt.connect()
@@ -100,7 +103,9 @@
                 console.info("setting up listener")
 
                 characteristic.addEventListener('characteristicvaluechanged',
-                    testchange);
+                    function () {
+                        testchange(event, BikeNo);
+                    });
 
                 // Reading value
                 console.info("Reading value")
@@ -118,12 +123,12 @@
 
         async disConnectDevice() {
 
-            await gattDisconnect(this.device);
+            await this.device.gatt.disconnect();
         }
 
         connectionDetails() {
 
-            return isConnected(this.device);
+            return this.device.gatt.connected;
 
         }
 
@@ -133,24 +138,51 @@
     const device2 = new BLEDevice();
 
 
-    async function myFunction(){
+    async function connectBike(BikeNo){
 
-        
-        await device.deviceDetails();
-        console.info(typeof device)
-        //console.info(device);
-        console.info(device.connectionDetails());
+        if (BikeNo == 1) {
 
-        let btn = document.createElement("button");
-        btn.innerHTML = "Reconect Bike 1";
-        btn.type = "submit";
-        btn.name = "formBtn";
-        btn.onclick = function () {
+            await device.deviceDetails(BikeNo);
+            console.info(typeof device)
+            //console.info(device);
+            console.info(device.connectionDetails());
 
-            device.startConnection();
+        } else {
+
+            await device2.deviceDetails(BikeNo);
+            console.info(typeof device2)
+            //console.info(device);
+            console.info(device2.connectionDetails());
+
+        }
+
+        if (!document.getElementById("reconnectBike" + BikeNo.toString())) {
+
+            let btn = document.createElement("button");
+            btn.innerHTML = "Reconect Bike " + BikeNo.toString();
+            btn.type = "submit";
+            btn.name = "formBtn";
+            btn.id = "reconnectBike" + BikeNo.toString();
+            if (BikeNo == 1) {
+
+                btn.onclick = function () {
+
+                    device.startConnection(1);
+
+                };
+            } else {
+
+
+                btn.onclick = function () {
+
+                    device2.startConnection(2);
+
+                };
+
+            };
+            document.getElementById("ReconnectArea").appendChild(btn);
 
         };
-        document.body.appendChild(btn);
 
     }
 
@@ -269,7 +301,7 @@
 
     }
 
-    function testchange(event) {
+    function testchange(event, bikeNo) {
         console.info("pwr event")
         //const testvalue = event.target.value.getUint8(0);
         power = event.target.value.getInt8(2);
@@ -298,18 +330,7 @@
         }
     }
 
-    async function connectFunc2() {
-        device2.deviceDetails = await getDevice();
-        console.info(typeof device2)
-        console.info(device2);
-        console.info("here");
-        const server = await device2.startConnection();
-        const services = await getPrimaryServices(server);
-        console.info(services);
-        console.info(device2.connectionDetails());
-
-
-    }
+    
 
     async function testConnectBtn() {
         console.info("D1");
@@ -319,53 +340,23 @@
     }
 
 
-    function isConnected(device) {
-        //if (!exists(device.gatt)) return false;
-        return device.gatt.connected;
+    async function btnDisconnect(BikeNo) {
+
+        if (BikeNo == 1) {
+
+            await device.disConnectDevice();
+
+            console.info("disconnected bike 1");
+
+        } else {
+
+            await device2.disConnectDevice();
+
+            console.info("disconnected bike 2");
+
+        };
+
     }
 
-    async function getDevice(){
-
-        return navigator.bluetooth.requestDevice({
-            /*acceptAllDevices: true*/
-            filters: [{ services: ['00001818-0000-1000-8000-00805f9b34fb'] }], optionalServices: ['battery_service']
-        });
-        
-    }
-    async function gattConnect(device) {
-
-        const server = await device.gatt.connect();
-        return server;
-    }
-    async function gattDisconnect(device) {
-        const self = this;
-        return await device.gatt.disconnect();
-    }
-    /*hasService(device, uuid) {
-        let res = false;
-        for (let service of device.services) {
-            if (service.uuid === uuid) res = true;
-        }
-        return res;
-    }*/
-    async function getPrimaryServices(server) {
-        const self = this;
-        const services = await server.getPrimaryServices('00001818-0000-1000-8000-00805f9b34fb');
-        return services;
-    }
-
-    function getMethods(obj) {
-        var result = [];
-        for (var id in obj) {
-            try {
-                if (typeof (obj[id]) == "function") {
-                    result.push(id + ": " + obj[id].toString());
-                }
-            } catch (err) {
-                result.push(id + ": inaccessible");
-            }
-        }
-        return result;
-    }
 
 </script>
