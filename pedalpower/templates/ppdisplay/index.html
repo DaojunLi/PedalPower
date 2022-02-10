@@ -12,6 +12,7 @@
     <button id="testBtn2" onclick="connectBike(2)">Connect d2</button>
     <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
     <button id="startBtn" onclick="start()">Start</button>
+    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
     <div></div>
     <div id="div test" style="display:none">
         <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
@@ -25,7 +26,7 @@
     </div>
     <div id="bulbs" style="display: none">
 
-        <img id ="1led"src="images/LED.PNG" alt="led" />
+        <img id="1led" src="images/LED.PNG" alt="led" />
 
 
     </div>
@@ -154,28 +155,33 @@
 
         }
 
-        let btn = document.createElement("button");
-        btn.innerHTML = "Reconect Bike " + BikeNo.toString();
-        btn.type = "submit";
-        btn.name = "formBtn";
-        if (BikeNo == 1) {
+        if (!document.getElementById("reconnectBike" + BikeNo.toString())) {
 
-            btn.onclick = function () {
+            let btn = document.createElement("button");
+            btn.innerHTML = "Reconect Bike " + BikeNo.toString();
+            btn.type = "submit";
+            btn.name = "formBtn";
+            btn.id = "reconnectBike" + BikeNo.toString();
+            if (BikeNo == 1) {
 
-                device.startConnection(1);
+                btn.onclick = function () {
+
+                    device.startConnection(1);
+
+                };
+            } else {
+
+
+                btn.onclick = function () {
+
+                    device2.startConnection(2);
+
+                };
 
             };
-        } else {
-
-
-            btn.onclick = function () {
-
-                device2.startConnection(2);
-
-            };
+            document.body.appendChild(btn);
 
         };
-        document.body.appendChild(btn);
 
     }
 
@@ -371,9 +377,19 @@
         const server = await device.gatt.connect();
         return server;
     }
+
+    async function btnDisconnect(BikeNo) {
+
+        await device.disConnectDevice();
+
+        console.info("disconnected");
+
+
+    }
+
     async function gattDisconnect(device) {
         const self = this;
-        return await device.gatt.disconnect();
+        await device.gatt.disconnect();
     }
     /*hasService(device, uuid) {
         let res = false;
