@@ -13,7 +13,8 @@
     <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
     <button id="startBtn" onclick="start()">Start</button>
     <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
-    <div></div>
+    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 2</button>
+    <div id="ReconnectArea"></div>
     <div id="div test" style="display:none">
         <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
         <button id="Btn2" style="display: block">Hard - Toasting Bread</button>
@@ -122,12 +123,12 @@
 
         async disConnectDevice() {
 
-            await gattDisconnect(this.device);
+            await this.device.gatt.disconnect();
         }
 
         connectionDetails() {
 
-            return isConnected(this.device);
+            return this.device.gatt.connected;
 
         }
 
@@ -179,29 +180,9 @@
                 };
 
             };
-            document.body.appendChild(btn);
+            document.getElementById("ReconnectArea").appendChild(btn);
 
         };
-
-    }
-
-    async function connectFunc2() {
-        await device2.deviceDetails(2);
-        console.info(typeof device2)
-        //console.info(device);
-        console.info(device2.connectionDetails());
-
-        let btn = document.createElement("button");
-        btn.innerHTML = "Reconect Bike 2";
-        btn.type = "submit";
-        btn.name = "formBtn";
-        btn.onclick = function () {
-
-            device.startConnection(2);
-
-        };
-        document.body.appendChild(btn);
-
 
     }
 
@@ -359,63 +340,23 @@
     }
 
 
-    function isConnected(device) {
-        //if (!exists(device.gatt)) return false;
-        return device.gatt.connected;
-    }
-
-    async function getDevice(){
-
-        return navigator.bluetooth.requestDevice({
-            /*acceptAllDevices: true*/
-            filters: [{ services: ['00001818-0000-1000-8000-00805f9b34fb'] }], optionalServices: ['battery_service']
-        });
-        
-    }
-    async function gattConnect(device) {
-
-        const server = await device.gatt.connect();
-        return server;
-    }
-
     async function btnDisconnect(BikeNo) {
 
-        await device.disConnectDevice();
+        if (BikeNo == 1) {
 
-        console.info("disconnected");
+            await device.disConnectDevice();
 
+            console.info("disconnected bike 1");
+
+        } else {
+
+            await device2.disConnectDevice();
+
+            console.info("disconnected bike 2");
+
+        };
 
     }
 
-    async function gattDisconnect(device) {
-        const self = this;
-        await device.gatt.disconnect();
-    }
-    /*hasService(device, uuid) {
-        let res = false;
-        for (let service of device.services) {
-            if (service.uuid === uuid) res = true;
-        }
-        return res;
-    }*/
-    async function getPrimaryServices(server) {
-        const self = this;
-        const services = await server.getPrimaryServices('00001818-0000-1000-8000-00805f9b34fb');
-        return services;
-    }
-
-    function getMethods(obj) {
-        var result = [];
-        for (var id in obj) {
-            try {
-                if (typeof (obj[id]) == "function") {
-                    result.push(id + ": " + obj[id].toString());
-                }
-            } catch (err) {
-                result.push(id + ": inaccessible");
-            }
-        }
-        return result;
-    }
 
 </script>
