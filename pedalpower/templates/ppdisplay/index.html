@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>Btest</title>
 </head>
+{% load static %}
 <body>
     <h1>Hello</h1>
     <p id="testOut">Nothing yet</p>
@@ -27,7 +28,7 @@
     </div>
     <div id="bulbs" style="display: none">
 
-        <img id="1led" src="images/LED.PNG" alt="led" />
+        <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
 
 
     </div>
@@ -36,13 +37,16 @@
 
 </html>
 <script type="text/javascript">
+    // Global variables here to be used in game
     var lvlselected = 0;
     var noBikes = 1;
     var modeSelected = 0;
-    const delay = ms => new Promise(res => setTimeout(res, ms));
     var inGame = false;
-    var curBulbs = 1;
-    
+    var curBulbs = 0;
+    var bike1pwr = 0;
+    var bike2pwr = 0;
+
+    //Class for the bikes
     class BLEDevice {
 
         device;
@@ -80,11 +84,6 @@
 
         }
 
-        /*constructor(inDevice) {
-
-            this.device = inDevice;
-        }*/
-
         async startConnection(BikeNo) {
 
             console.info(device);
@@ -115,12 +114,6 @@
 
         }
 
-        delay(n) {
-            return new Promise(function (resolve) {
-                setTimeout(resolve, n * 1000);
-            });
-        }
-
         async disConnectDevice() {
 
             await this.device.gatt.disconnect();
@@ -134,10 +127,11 @@
 
     }
 
+    //Global variables to store details for both bikes as objects
     const device = new BLEDevice();
     const device2 = new BLEDevice();
 
-
+    // Code for connection buttons goes here
     async function connectBike(BikeNo){
 
         if (BikeNo == 1) {
@@ -186,6 +180,166 @@
 
     }
 
+   
+
+    
+
+    async function testConnectBtn() {
+        console.info("D1");
+        console.info(device.connectionDetails());
+        console.info("D2");
+        console.info(device2.connectionDetails());
+    }
+
+
+    async function btnDisconnect(BikeNo) {
+
+        if (BikeNo == 1) {
+
+            await device.disConnectDevice();
+
+            console.info("disconnected bike 1");
+
+        } else {
+
+            await device2.disConnectDevice();
+
+            console.info("disconnected bike 2");
+
+        };
+
+    }
+
+    //Event handler for recieving gatt notifications and running of games
+    function testchange(event, bikeNo) {
+        console.info("pwr event")
+        //const testvalue = event.target.value.getUint8(0);
+        power = event.target.value.getInt8(2);
+        console.info('Power is ' + event.target.value.getInt8(2));
+        if (bikeNo == 1) {
+
+            bike1pwr = power;
+
+        } else {
+
+            bike2pwr = power;
+
+        };
+
+        if (inGame) {
+
+            //mode sected value of 1 indicates bulbs
+            if (lvlselected == 1) {
+
+                if (modeSelected == 0) {
+
+                    soloCoopBulb(power);
+
+                } else if (modeSelected == 1) {
+
+                    soloCoopBulb(bike2pwr + bike1pwr);
+
+                } else if (modeSelected == 2) {
+
+                    compBulb(bikeNo, power);
+
+                } else if (modeSelected == 3) {
+
+                    coopetBulb(bikeNo, power);
+
+                };
+
+                //Level selected value of 2 is toaster game
+            } else if (lvlselected == 2) {
+
+                if (modeSelected == 0) {
+
+                    soloCoopToaster(power);
+
+                } else if (modeSelected == 1) {
+
+                    soloCoopToaster(bike2pwr + bike1pwr);
+
+                } else if (modeSelected == 2) {
+
+                    compToaster(bikeNo, power);
+
+                } else if (modeSelected == 3) {
+
+                    coopetToaster(bikeNo, power);
+
+                };
+
+            } else if (lvlselected == 3) {
+
+                if (modeSelected == 0) {
+
+                    soloCoopKettle(power);
+
+                } else if (modeSelected == 1) {
+
+                    soloCoopKettle(bike2pwr + bike1pwr);
+
+                } else if (modeSelected == 2) {
+
+                    compKettle(bikeNo, power);
+
+                } else if (modeSelected == 3) {
+
+                    coopetKettle(bikeNo, power);
+
+                };
+
+            }
+
+            
+
+        }
+    }
+
+    //Bulb games
+
+    function soloCoopBulb(power) {
+
+        bulbs = Math.ceil(power / 6);
+
+        if (curBulbs < bulbs) {
+
+            var newBulbs = bulbs - curBulbs;
+
+            for (i = curBulbs; i < bulbs; i++) {
+
+                let newLed = document.createElement("img");
+                newLed.id = i.toString() + "led";
+                console.info(newLed.id);
+                newLed.src = "{% static 'images/LED.PNG'%}";
+                document.getElementById("bulbs").appendChild(newLed);
+
+            }
+
+            curBulbs = bulbs;
+
+        } else if (curBulbs > bulbs) {
+
+            var delBulbs = curBulbs - bulbs;
+
+            for (i = 1; i <= delBulbs; i++) {
+                console.info((curBulbs - i).toString() + "led");
+               document.getElementById((curBulbs - i).toString()+"led").remove();
+                
+
+            }
+
+            curBulbs = bulbs;
+
+        };
+
+
+    }
+
+
+// Code for games menu goes here
+
     function start() {
 
         document.getElementById("div test").style.display = "block";
@@ -204,7 +358,7 @@
 
         document.getElementById("Btn1").onclick = function () {
             lvlselected = 1;
-            
+
             console.info("Selected: 1");
             selectBikes();
         };
@@ -283,12 +437,26 @@
 
     }
 
-
-
     function startGame() {
 
-        console.info("test");
-        document.getElementById("bulbs").style.display = "block";
+        console.info("game started");
+        document.getElementById("div test").style.display = "none";
+
+        if (lvlselected == 1) {
+
+            document.getElementById("bulbs").style.display = "block";
+
+            //Level selected value of 2 is toaster game
+        } else if (lvlselected == 2) {
+
+            //todo add toaster
+
+        } else if (lvlselected == 3) {
+
+            //todo add kettle
+
+        }
+        
         inGame = true;
 
 
@@ -298,63 +466,6 @@
 
         document.getElementById("div test").style.display = "none";
         document.getElementById("divInstr").style.display = "block";
-
-    }
-
-    function testchange(event, bikeNo) {
-        console.info("pwr event")
-        //const testvalue = event.target.value.getUint8(0);
-        power = event.target.value.getInt8(2);
-        console.info('Power is ' + event.target.value.getInt8(2));
-        if (inGame) {
-
-            bulbs = Math.ceil(power / 6);
-
-            if (curBulbs < bulbs) {
-
-                var newBulbs = bulbs - curBulbs;
-
-                for (i = 0; i < newBulbs; i++) {
-
-                    let newLed = document.createElement("img");
-                    newLed.id = i.toString() + "led";
-                    newLed.src = "images/LED.PNG";
-                    document.getElementById("bulbs").appendChild(newLed);
-
-                }
-
-                curBulbs = bulbs;
-
-            }
-
-        }
-    }
-
-    
-
-    async function testConnectBtn() {
-        console.info("D1");
-        console.info(device.connectionDetails());
-        console.info("D2");
-        console.info(device2.connectionDetails());
-    }
-
-
-    async function btnDisconnect(BikeNo) {
-
-        if (BikeNo == 1) {
-
-            await device.disConnectDevice();
-
-            console.info("disconnected bike 1");
-
-        } else {
-
-            await device2.disConnectDevice();
-
-            console.info("disconnected bike 2");
-
-        };
 
     }
 
