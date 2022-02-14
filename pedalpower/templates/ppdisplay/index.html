@@ -14,7 +14,7 @@
     <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
     <button id="startBtn" onclick="start()">Start</button>
     <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
-    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 2</button>
+    <button id="DisconnectBtn" onclick="btnDisconnect(2)">Disconnect Bike 2</button>
     <div id="ReconnectArea"></div>
     <div id="div test" style="display:none">
         <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
@@ -51,7 +51,7 @@
     var bike1pwr = 0;
     var bike2pwr = 0;
     var timeExp;
-    var bulbPhase = true;
+    var bulbPhase = 0;
     var ledBulbs = 0;
     var filBulbs = 0;
 
@@ -309,7 +309,7 @@
 
         bulbs = Math.ceil(power / 6);
 
-        if (bulbPhase) {
+        if (bulbPhase == 0) {
 
             srcImg = "{% static 'images/LED.PNG'%}";
 
@@ -442,6 +442,8 @@
             console.info("Selected: co-op");
             dispInstructions();
 
+            startGame();
+
         };
         document.getElementById("Btn2").onclick = function () {
             modeSelected = 2;
@@ -465,10 +467,11 @@
 
             document.getElementById("bulbs").style.display = "block";
             document.getElementById("timer").style.display = "block";
-            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            document.getElementById("bulbFacts").style.display = "none";
+            document.getElementById("bulbDescription").innerHTML = "How many LED bulbs can you power for 30 seconds?";
             ledBulbs = 0;
             filBulbs = 0;
-            bulbPhase = true;
+            bulbPhase = 0;
 
             timeExp = new Date(Date.now() + 30 * 1000);
 
@@ -517,9 +520,9 @@
         }
         // document.getElementById("timer").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
         // If the count down is finished, write some text
-        if (inGame && bulbPhase && distance < 0) {
+        if (inGame && bulbPhase == 0 && distance < 0) {
             try {
-                document.getElementById("timer").innerHTML = "Time Expired";
+                document.getElementById("timer").style.display = "none";
             } catch (e) {
 
             }
@@ -534,10 +537,20 @@
 
             };
             curBulbs = 0;
-            bulbPhase = false;
-            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            bulbPhase = 1;
+            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + ", how many filiment bulbs can you now power?";
+
+            timeExp = new Date(Date.now() + 5 * 1000);
+            inGame = false;
+        } else if (bulbPhase == 1 && distance < 0) {
+
             timeExp = new Date(Date.now() + 30 * 1000);
-        } else if (inGame && !bulbPhase && distance < 0) {
+            document.getElementById("timer").style.display = "block";
+            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            bulbPhase += 1;
+            inGame = true;
+
+        } else if (inGame && bulbPhase == 2 && distance < 0) {
             try {
                 document.getElementById("timer").innerHTML = "Time Expired";
             } catch (e) {
@@ -560,7 +573,16 @@
             document.getElementById("bulbFacts").style.display = "block";
 
             document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " Filiment Bulbs";
+            bulbPhase = 3;
+            
+            timeExp = new Date(Date.now() + 10 * 1000);
+        } else if (inGame && bulbPhase == 3 && distance < 0) {
 
+            document.getElementById("timer").style.display = "none";
+            document.getElementById("bulbFacts").style.display = "none";
+            document.getElementById("bulbs").style.display = "none";
+            inGame = false;
+            start();
         }
         
     }, 1000);
