@@ -28,10 +28,12 @@
     </div>
     <div id="bulbs" style="display: none">
 
-        <p>How many bulbs can you power for 30 seconds?</p>
+        <p id="bulbDescription">How many LED bulbs can you power for 30 seconds?</p>
         <p id="timer"></p>
-
+        <p id="bulbFacts" style="display:none">It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
+        Save the environment switch to LED bulbs.</p>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
+
 
 
     </div>
@@ -50,6 +52,8 @@
     var bike2pwr = 0;
     var timeExp;
     var bulbPhase = true;
+    var ledBulbs = 0;
+    var filBulbs = 0;
 
     //Class for the bikes
     class BLEDevice {
@@ -185,9 +189,6 @@
 
     }
 
-   
-
-    
 
     async function testConnectBtn() {
         console.info("D1");
@@ -310,17 +311,20 @@
 
         if (bulbPhase) {
 
-            srcImg = "{% static 'images/LED.PNG'%}"
+            srcImg = "{% static 'images/LED.PNG'%}";
+
+            if (ledBulbs < bulbs) { ledBulbs = bulbs; }
 
         } else {
 
-            srcImg = "{% static 'images/Filiment.PNG'%}"
+            srcImg = "{% static 'images/Filiment.PNG'%}";
+
+            if (filBulbs < bulbs) { filBulbs = bulbs; }
 
         };
 
         if (curBulbs < bulbs) {
 
-            var newBulbs = bulbs - curBulbs;
 
             for (i = curBulbs; i < bulbs; i++) {
 
@@ -460,7 +464,10 @@
         if (lvlselected == 1) {
 
             document.getElementById("bulbs").style.display = "block";
-
+            document.getElementById("timer").style.display = "block";
+            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            ledBulbs = 0;
+            filBulbs = 0;
             bulbPhase = true;
 
             timeExp = new Date(Date.now() + 30 * 1000);
@@ -498,8 +505,7 @@
         // Find the distance between now and the count down date
         var distance = timeExp - now;
 
-        // Time calculations for hours, minutes and seconds
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        // Time calculations for minutes and seconds
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -518,14 +524,43 @@
 
             }
 
-            for (i = 1; i <= curBulbs; i++) {
+            for (i = 0; i <= curBulbs; i++) {
                 console.info(i.toString() + "led");
-                document.getElementById(i.toString() + "led").remove();
+                try {
+                    document.getElementById(i.toString() + "led").remove();
+                } catch (e) {
 
+                }
+
+            };
+            curBulbs = 0;
+            bulbPhase = false;
+            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            timeExp = new Date(Date.now() + 30 * 1000);
+        } else if (inGame && !bulbPhase && distance < 0) {
+            try {
+                document.getElementById("timer").innerHTML = "Time Expired";
+            } catch (e) {
 
             }
 
-            bulbPhase 
+            for (i = 0; i < curBulbs; i++) {
+                console.info(i.toString() + "led");
+                try {
+                    document.getElementById(i.toString() + "led").remove();
+                } catch (e) {
+
+                }
+
+            };
+            curBulbs = 0;
+            bulbPhase = false;
+
+            document.getElementById("timer").style.display = "none";
+            document.getElementById("bulbFacts").style.display = "block";
+
+            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " Filiment Bulbs";
+
         }
         
     }, 1000);

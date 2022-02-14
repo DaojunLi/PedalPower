@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\pedalpower",
+    "\\pedalpower\\pedalpower",
+    "\\pedalpower\\static",
+    "\\pedalpower\\static\\images",
+    "\\pedalpower\\static\\js",
+    "\\pedalpower\\templates",
+    "\\pedalpower\\templates\\ppdisplay"
+  ],
+  "SelectedNode": "\\pedalpower\\pedalpower\\settings.py",
+  "PreviewInSolutionExplorer": false
+}
