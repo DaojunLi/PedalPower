@@ -28,6 +28,9 @@
     </div>
     <div id="bulbs" style="display: none">
 
+        <p>How many bulbs can you power for 30 seconds?</p>
+        <p id="timer"></p>
+
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
 
 
@@ -45,6 +48,8 @@
     var curBulbs = 0;
     var bike1pwr = 0;
     var bike2pwr = 0;
+    var timeExp;
+    var bulbPhase = true;
 
     //Class for the bikes
     class BLEDevice {
@@ -303,6 +308,16 @@
 
         bulbs = Math.ceil(power / 6);
 
+        if (bulbPhase) {
+
+            srcImg = "{% static 'images/LED.PNG'%}"
+
+        } else {
+
+            srcImg = "{% static 'images/Filiment.PNG'%}"
+
+        };
+
         if (curBulbs < bulbs) {
 
             var newBulbs = bulbs - curBulbs;
@@ -312,7 +327,7 @@
                 let newLed = document.createElement("img");
                 newLed.id = i.toString() + "led";
                 console.info(newLed.id);
-                newLed.src = "{% static 'images/LED.PNG'%}";
+                newLed.src = srcImg;
                 document.getElementById("bulbs").appendChild(newLed);
 
             }
@@ -446,6 +461,10 @@
 
             document.getElementById("bulbs").style.display = "block";
 
+            bulbPhase = true;
+
+            timeExp = new Date(Date.now() + 30 * 1000);
+
             //Level selected value of 2 is toaster game
         } else if (lvlselected == 2) {
 
@@ -468,6 +487,49 @@
         document.getElementById("divInstr").style.display = "block";
 
     }
+
+    // timer function
+
+    var x = setInterval(function () {
+        
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = timeExp - now;
+
+        // Time calculations for hours, minutes and seconds
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result in the element with id="demo"
+        try {
+            document.getElementById("timer").innerHTML = seconds + "s ";
+        } catch (e) {
+
+        }
+        // document.getElementById("timer").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        // If the count down is finished, write some text
+        if (inGame && bulbPhase && distance < 0) {
+            try {
+                document.getElementById("timer").innerHTML = "Time Expired";
+            } catch (e) {
+
+            }
+
+            for (i = 1; i <= curBulbs; i++) {
+                console.info(i.toString() + "led");
+                document.getElementById(i.toString() + "led").remove();
+
+
+            }
+
+            bulbPhase 
+        }
+        
+    }, 1000);
+
 
 
 </script>
