@@ -35,13 +35,9 @@
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
         <table id="bulbvsTable" style="display:none">
             <tr>
-                <td></td>
-                <td>Bike 1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Bike 2</td>
-                <td></td>
+                <th colspan="3">Bike 1</th>
+                <th>VS</th>
+                <th colspan="3">Bike 2</th>
             </tr>
             <tr>
                 <td></td>
@@ -74,9 +70,9 @@
     var ledBulbs = 0;
     var filBulbs = 0;
     var bulbDivisor = 6;
-    /*var compCurBulbs = [0, 0];
+    var compCurBulbs = [0, 0];
     var compLedBulbs = [0, 0];
-    var compFilBulbs = [0, 0];*/
+    var compFilBulbs = [0, 0];
 
     //Class for the bikes
     class BLEDevice {
@@ -383,7 +379,7 @@
 
     function compBulb(bikeNo, power) {
 
-        /*bulbs = Math.ceil(power / bulbDivisor);
+        bulbs = Math.ceil(power / bulbDivisor);
 
         if (bulbPhase == 0) {
 
@@ -404,31 +400,50 @@
 
             for (i = compCurBulbs[bikeNo - 1]; i < bulbs; i++) {
 
-                let newLed = document.createElement("img");
-                newLed.id = i.toString() + "led";
-                console.info(newLed.id);
-                newLed.src = srcImg;
-                document.getElementById("bulbs").appendChild(newLed);
-                myTable.rows[0].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src='+srcImg+' alt="led" />';
+                document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src='+srcImg+' alt="led" />';
 
             }
 
             compCurBulbs[bikeNo - 1] = bulbs;
 
-        } else if (curBulbs > bulbs) {
+        } else if (compCurBulbs[bikeNo - 1] > bulbs && bikeNo == 1) {
 
-            var delBulbs = curBulbs - bulbs;
+            var delBulbs = compCurBulbs[bikeNo - 1] - bulbs;
 
             for (i = 1; i <= delBulbs; i++) {
-                console.info((curBulbs - i).toString() + "led");
-                document.getElementById((curBulbs - i).toString() + "led").remove();
+                console.info((compCurBulbs[bikeNo - 1] - i).toString() + "led");
+                document.getElementById((compCurBulbs[bikeNo - 1] - i).toString() + "led").remove();
 
 
             }
 
-            curBulbs = bulbs;
+            compCurBulbs[bikeNo - 1] = bulbs;
 
-        };*/
+        }else if (compCurBulbs[bikeNo - 1] < bulbs && bikeNo == 2) {
+
+
+            for (i = compCurBulbs[bikeNo - 1]; i < bulbs; i++) {
+
+                document.getElementById("bulbvsTable").rows[1].cells[i+4].innerHTML = '<img id="' + (i+4).toString() + 'led" src=' + srcImg + ' alt="led" />';
+
+            }
+
+            compCurBulbs[bikeNo - 1] = bulbs;
+
+        } else if (compCurBulbs[bikeNo - 1] > bulbs && bikeNo == 2) {
+
+            var delBulbs = compCurBulbs[bikeNo - 1] - bulbs;
+
+            for (i = 1; i <= delBulbs; i++) {
+                console.info((compCurBulbs[bikeNo - 1]+4 - i).toString() + "led");
+                document.getElementById((compCurBulbs[bikeNo - 1]+4 - i).toString() + "led").remove();
+
+
+            }
+
+            compCurBulbs[bikeNo - 1] = bulbs;
+
+        };
 
 
     }
@@ -556,7 +571,7 @@
 
                 document.getElementById("bulbvsTable").style.display = "block";
 
-            }
+            };
 
             //Level selected value of 2 is toaster game
         } else if (lvlselected == 2) {
@@ -619,7 +634,17 @@
                 }
 
             };
+            for (i = 0; i < compCurBulbs[1] + 4; i++) {
+                console.info(i.toString() + "led");
+                try {
+                    document.getElementById(i.toString() + "led").remove();
+                } catch (e) {
+
+                }
+
+            };
             curBulbs = 0;
+            compCurBulbs = [0, 0];
             bulbPhase = 1;
             document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + ", how many filiment bulbs can you now power?";
 
@@ -650,7 +675,18 @@
                 }
 
             };
+
+            for (i = 0; i < compCurBulbs[1]+4; i++) {
+                console.info(i.toString() + "led");
+                try {
+                    document.getElementById(i.toString() + "led").remove();
+                } catch (e) {
+
+                }
+
+            };
             curBulbs = 0;
+            compCurBulbs = [0, 0];
             bulbPhase = false;
 
             document.getElementById("timer").style.display = "none";
