@@ -33,7 +33,26 @@
         <p id="bulbFacts" style="display:none">It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
         Save the environment switch to LED bulbs.</p>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
-
+        <table id="bulbvsTable" style="display:none">
+            <tr>
+                <td></td>
+                <td>Bike 1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Bike 2</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
 
     </div>
@@ -54,6 +73,10 @@
     var bulbPhase = 0;
     var ledBulbs = 0;
     var filBulbs = 0;
+    var bulbDivisor = 6;
+    /*var compCurBulbs = [0, 0];
+    var compLedBulbs = [0, 0];
+    var compFilBulbs = [0, 0];*/
 
     //Class for the bikes
     class BLEDevice {
@@ -307,7 +330,9 @@
 
     function soloCoopBulb(power) {
 
-        bulbs = Math.ceil(power / 6);
+
+
+        bulbs = Math.ceil(power / bulbDivisor);
 
         if (bulbPhase == 0) {
 
@@ -356,7 +381,57 @@
 
     }
 
+    function compBulb(bikeNo, power) {
 
+        /*bulbs = Math.ceil(power / bulbDivisor);
+
+        if (bulbPhase == 0) {
+
+            srcImg = "{% static 'images/LED.PNG'%}";
+
+            if (compLedBulbs[bikeNo - 1] < bulbs) { compLedBulbs[bikeNo - 1] = bulbs; }
+
+        } else {
+
+            srcImg = "{% static 'images/Filiment.PNG'%}";
+
+            if (compFilBulbs[bikeNo - 1] < bulbs) { compFilBulbs[bikeNo - 1] = bulbs; }
+
+        };
+
+        if (compCurBulbs[bikeNo - 1] < bulbs && bikeNo ==1) {
+
+
+            for (i = compCurBulbs[bikeNo - 1]; i < bulbs; i++) {
+
+                let newLed = document.createElement("img");
+                newLed.id = i.toString() + "led";
+                console.info(newLed.id);
+                newLed.src = srcImg;
+                document.getElementById("bulbs").appendChild(newLed);
+                myTable.rows[0].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src='+srcImg+' alt="led" />';
+
+            }
+
+            compCurBulbs[bikeNo - 1] = bulbs;
+
+        } else if (curBulbs > bulbs) {
+
+            var delBulbs = curBulbs - bulbs;
+
+            for (i = 1; i <= delBulbs; i++) {
+                console.info((curBulbs - i).toString() + "led");
+                document.getElementById((curBulbs - i).toString() + "led").remove();
+
+
+            }
+
+            curBulbs = bulbs;
+
+        };*/
+
+
+    }
 // Code for games menu goes here
 
     function start() {
@@ -449,6 +524,8 @@
             modeSelected = 2;
 
             console.info("Selected: comp");
+
+            startGame();
         };
         document.getElementById("Btn3").onclick = function () {
             modeSelected = 3;
@@ -472,8 +549,14 @@
             ledBulbs = 0;
             filBulbs = 0;
             bulbPhase = 0;
+            bulbDivisor = 6;
 
             timeExp = new Date(Date.now() + 30 * 1000);
+            if (modeSelected == 2) {
+
+                document.getElementById("bulbvsTable").style.display = "block";
+
+            }
 
             //Level selected value of 2 is toaster game
         } else if (lvlselected == 2) {
@@ -518,8 +601,8 @@
         } catch (e) {
 
         }
-        // document.getElementById("timer").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-        // If the count down is finished, write some text
+
+        
         if (inGame && bulbPhase == 0 && distance < 0) {
             try {
                 document.getElementById("timer").style.display = "none";
@@ -549,6 +632,7 @@
             document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
             bulbPhase += 1;
             inGame = true;
+            bulbDivisor = 40
 
         } else if (inGame && bulbPhase == 2 && distance < 0) {
             try {
