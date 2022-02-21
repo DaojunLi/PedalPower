@@ -9,6 +9,7 @@
     table {
         width: 100%;
         table-layout: fixed;
+        empty-cells: show;
     }
 
     .bulbCell {
@@ -103,7 +104,7 @@
     var compLedBulbs = [0, 0];
     var compFilBulbs = [0, 0];
     let width = screen.width
-    var imgWidth = 0.09 * width;
+    var imgWidth = 0.07 * width;
     var imgHeightPerc = imgWidth / 142;
     var imgHeight = 0;
     //Class for the bikes
@@ -432,17 +433,19 @@
 
         if (bulbs <= 5) {
 
+            //Add more bulbs to bike 1 if less than 5 bulbs powering
             if (compCurBulbs[bikeNo - 1] < bulbs && bikeNo == 1) {
 
 
-                for (i = compCurBulbs[bikeNo - 1]; i < bulbs; i++) {
+                for (i = 0; i < bulbs; i++) {
 
-                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src=' + srcImg + ' alt="led" width = "'+ imgWidth.toString() +'" height ="' + imgWidth.toString +'"  />';
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src=' + srcImg + ' alt="led" width = "'+ imgWidth.toString() +'" height ="' + imgHeight.toString() +'"  />';
 
                 }
 
                 compCurBulbs[bikeNo - 1] = bulbs;
 
+                //If no of bulbs being powered less than current bulbs remove unpowered bulbs
             } else if (compCurBulbs[bikeNo - 1] > bulbs && bikeNo == 1) {
 
                 var delBulbs = compCurBulbs[bikeNo - 1] - bulbs;
@@ -456,12 +459,13 @@
 
                 compCurBulbs[bikeNo - 1] = bulbs;
 
+                //If bike 2 needs more bulbs powered add them
             } else if (compCurBulbs[bikeNo - 1] < bulbs && bikeNo == 2) {
 
 
-                for (i = compCurBulbs[bikeNo - 1]; i < bulbs; i++) {
-
-                    document.getElementById("bulbvsTable").rows[1].cells[i + 6].innerHTML = '<img id="' + (i + 6).toString() + 'led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgWidth.toString() +'" />';
+                for (i = 10; i > 10- bulbs; i--) {
+                    console.info("adding bulb " + i.toString());
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + (i).toString() + 'led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'" />';
 
                 }
 
@@ -469,11 +473,9 @@
 
             } else if (compCurBulbs[bikeNo - 1] > bulbs && bikeNo == 2) {
 
-                var delBulbs = compCurBulbs[bikeNo - 1] - bulbs;
-
-                for (i = 1; i <= delBulbs; i++) {
-                    console.info((compCurBulbs[bikeNo - 1] + 4 - i).toString() + "led");
-                    document.getElementById((compCurBulbs[bikeNo - 1] + 4 - i).toString() + "led").remove();
+                for (i = 11 - compCurBulbs[bikeNo - 1]; i < 11-bulbs; i++) {
+                    console.info((i).toString() + "led");
+                    document.getElementById((i).toString() + "led").remove();
 
 
                 }
@@ -498,7 +500,7 @@
 
                 }
 
-                document.getElementById("bulbvsTable").rows[1].cells[2].innerHTML = '<img id="1led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgWidth.toString() +'" />';
+                document.getElementById("bulbvsTable").rows[1].cells[2].innerHTML = '<img id="1led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'" />';
                 document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = "x";
                 document.getElementById("bulbvsTable").rows[1].cells[4].innerHTML = bulbs;
                 compCurBulbs[bikeNo - 1] = bulbs;
@@ -521,7 +523,7 @@
 
                 }
 
-                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString + '" height ="' + imgWidth.toString +'"/>';
+                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'"/>';
                 document.getElementById("bulbvsTable").rows[1].cells[9].innerHTML = "x";
                 document.getElementById("bulbvsTable").rows[1].cells[10].innerHTML = bulbs;
                 compCurBulbs[bikeNo - 1] = bulbs;
@@ -656,6 +658,16 @@
 
                 document.getElementById("bulbvsTable").style.display = "block";
 
+                var srcImg = "{% static 'images/blank.png'%}";
+                imgHeight = imgHeightPerc * 241;
+
+                for (i = 0; i < 11; i++) {
+
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
+
+
+                }
+
             };
 
             //Level selected value of 2 is toaster game
@@ -719,15 +731,15 @@
                 }
 
             };
-            for (i = 0; i < compCurBulbs[1] + 4; i++) {
-                console.info(i.toString() + "led");
-                try {
-                    document.getElementById(i.toString() + "led").remove();
-                } catch (e) {
+            var srcImg = "{% static 'images/blank.png'%}";
+            imgHeight = imgHeightPerc * 241;
 
-                }
+            for (i = 0; i < 11; i++) {
 
-            };
+                document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
+
+
+            }
             curBulbs = 0;
             compCurBulbs = [0, 0];
             bulbPhase = 1;
@@ -761,15 +773,15 @@
 
             };
 
-            for (i = 0; i < compCurBulbs[1]+4; i++) {
-                console.info(i.toString() + "led");
-                try {
-                    document.getElementById(i.toString() + "led").remove();
-                } catch (e) {
+            var srcImg = "{% static 'images/blank.png'%}";
+            imgHeight = imgHeightPerc * 241;
 
-                }
+            for (i = 0; i < 11; i++) {
 
-            };
+                document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
+
+
+            }
             curBulbs = 0;
             compCurBulbs = [0, 0];
             
