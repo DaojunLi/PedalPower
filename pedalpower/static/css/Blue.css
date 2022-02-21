@@ -1,0 +1,19 @@
+.Btn_table {
+    border-collapse: separate;
+    border: solid #005398 1px;
+    border-radius: 6px;
+    -moz-border-radius:6px;
+}
+.btn_td, .btn_th {
+    border-left: solid #005398 1px;
+    border-top: solid #005398 1px;
+
+}
+.btn_th {
+    background-color: #005398;
+    border-top: none;
+}
+.btn_td:first-child, .btn_th:first-child {
+        border-left: none;
+}
+

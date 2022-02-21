@@ -19,9 +19,12 @@
             width: 5%;
         }
     </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/Blue.css' %}" />
 </head>
 
 {% load static %}
+
 <body>
     <button id="testBtn" onclick="connectBike(1)">Connect d1</button>
     <button id="testBtn2" onclick="connectBike(2)">Connect d2</button>
