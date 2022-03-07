@@ -1,0 +1,146 @@
+.Btn_table {
+    margin: auto;
+    width: 50%;
+    border-collapse: collapse;
+    border: solid #FFD700 1px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-style: hidden; /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 1px #FFD700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.btn_td, .btn_th {
+    border-left: solid #FFD700 1px;
+    border-top: solid #FFD700 1px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    width: 50%;
+}
+.btn_th {
+    background-color: #FFD700;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top: none;
+    color: black;
+}
+.btn_td:first-child, .btn_th:first-child {
+    border-left: none;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+body{
+    margin:0;
+    padding:0;
+    background-color:black;
+    color:black;
+}
+
+.split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.left {
+    left: 0;
+}
+
+/* Control the right side */
+.right {
+    right: 0;
+}
+.instrImg {
+    max-width: calc(0.47*95vh);
+    max-height: 95vh;
+    margin: auto;
+}
+
+.splashScreenArea {
+    /* The image used */
+    background-image: url("/static/images/splash1.PNG");
+    /* Full height */
+    height: 100vh;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.splashScreenImg {
+    width: 98vw;
+    height: 97vh;
+    margin:0;
+    padding: 0;
+}
+h1 {
+    color: #FFD700;
+    text-align: center;
+}
+h2 {
+    color: #FFD700;
+    text-align: center;
+}
+
+p {
+    color: #FFD700;
+    text-align: center;
+}
+
+button {
+    background-color: #FFD700;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin: auto;
+    justify-content: center;
+}
+
+.selectBtn {
+    height: 15vh;
+    width: 60vw;
+    font-size: 5vh;
+    margin-top: 5vh;
+}
+
+.bikeBtn{
+
+    height: 30vh;
+    width: 30vw;
+    font-size: 25vh;
+    margin-top:25vh;
+
+}
+
+#bulbvsTable {
+    width: 100%;
+    table-layout: fixed;
+    empty-cells: show;
+}
+
+.bulbCell {
+    width: 9.5%;
+}
+
+.vsCell {
+    width: 5%;
+}
+div {
+    text-align: center;
+}
+div {
+    color:black;
+}
