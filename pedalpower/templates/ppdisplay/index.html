@@ -5,19 +5,7 @@
     <meta charset="utf-8" />
     <title>Btest</title>
     <style>
-        table {
-            width: 100%;
-            table-layout: fixed;
-            empty-cells: show;
-        }
-
-        .bulbCell {
-            width: 9.5%;
-        }
-
-        .vsCell {
-            width: 5%;
-        }
+        
     </style>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/Blue.css' %}" />
@@ -26,29 +14,97 @@
 {% load static %}
 
 <body>
-    <button id="testBtn" onclick="connectBike(1)">Connect d1</button>
-    <button id="testBtn2" onclick="connectBike(2)">Connect d2</button>
-    <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
-    <button id="startBtn" onclick="start()">Start</button>
-    <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
-    <button id="DisconnectBtn" onclick="btnDisconnect(2)">Disconnect Bike 2</button>
-    <div id="ReconnectArea"></div>
+    <div id="menuBar">
+        <button id="testBtn" onclick="connectBike(1)">Connect d1</button>
+        <button id="testBtn2" onclick="connectBike(2)">Connect d2</button>
+        <button id="hideBtn" onclick="hideMenu()">Hide Menu & Go Full Screen</button>
+        <button id="testBtn3" onclick="testConnectBtn()">Test connect</button>
+        <button id="startBtn" onclick="start()">Launch interaction menu</button>
+        <button id="DisconnectBtn" onclick="btnDisconnect(1)">Disconnect Bike 1</button>
+        <button id="DisconnectBtn" onclick="btnDisconnect(2)">Disconnect Bike 2</button>
+        <div id="ReconnectArea"></div>
+    </div>
+    <div class="splashScreenImg" id="splashScreenArea">
+
+        <img class="splashScreenImg" id="splashScreenImg" src="{% static 'images/splash1.PNG'%}"onclick="start()"/>
+
+    </div>
+    
     <div id="div test" style="display:none">
-        <button id="Btn1" style="display:block">Easy - Light Bulbs</button>
-        <button id="Btn2" style="display: block">Hard - Toasting Bread</button>
-        <button id="Btn3" style="display: block">Impossible - Boiling A Kettle</button>
+        <div id="btn_table_area">
+            <table id="Btn1_table" class="Btn_table">
+                <tr>
+                    <th class="btn_th">Easy - Light Bulbs</th>
+                </tr>
+                <tr>
+                    <td class="btn_td">
+                        <p class="btn_para">
+                            How many LED light bulbs can you power for 30 seconds?
+                            Can you power the same number of filiment bulbs for 30 seconds too?
+                        </p>
+                        <button class="start_btn" style="display:block" onclick="selectBikes(1)">Start!</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="Btn2_table" class="Btn_table">
+                <tr>
+                    <th class="btn_th">Hard - Toasting Bread</th>
+                </tr>
+                <tr>
+                    <td class="btn_td">
+                        <p class="btn_para">
+                            Can you toast a slice of bread?
+                            A test of your endurance.
+                        </p>
+                        <button class="start_btn" style="display:block" onclick="selectBikes(2)">Start!</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="Btn3_table" class="Btn_table">
+                <tr>
+                    <th class="btn_th">Impossible - Boiling A Kettle</th>
+                </tr>
+                <tr>
+                    <td class="btn_td">
+                        <p class="btn_para">
+                            Can you boil a kettle?
+                            This impossible task will see how many degrees you can raise some water for a cup of tea.
+                        </p>
+                        <button class="start_btn" style="display:block" onclick="selectBikes(3)">Start!</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <h1 id="instrTitle" style="display: none">Select Bikes</h1>
+        <button id="Btn1" style="display: none" class="selectBtn">1</button>
+        <button id="Btn2" style="display: none" class="selectBtn">2</button>
+        <button id="Btn3" style="display: none" class="selectBtn">Co-opetition</button>
     </div>
     <div id="divInstr" style="display:none">
-
-        <p>test</p>
+        <div class="split left">
+        <h1>Reconnecting Bikes!</h1>
+        <h2> Step 1:</h2>
+        <p>Start Cycling</p>
+        <h2>Step 2:</h2>
+        <p>Wait for the menu to open as you cycle</p>
+        <h2>Step 3:</h2>
+        <p>Use the tick button to select quick start</p>
+        </div  >
+        <div class="split right">
+        <img src="{% static 'images/instrImg.PNG'%}" class="instrImg" />
+        </div>
 
     </div>
     <div id="bulbs" style="display: none">
 
-        <p id="bulbDescription">How many LED bulbs can you power for 30 seconds?</p>
+        <h1 id="bulbDescription">How many LED bulbs can you power for 30 seconds?</h1>
+        <p id="bulbDescription2" stle="display:none">That's enough to power the lights in treehouse for that time!</p>
+        <h2>Bike paused? Select resume with the tick button on the bike</h2>
         <p id="timer"></p>
-        <p id="bulbFacts" style="display:none">It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
-        Save the environment switch to LED bulbs.</p>
+        <p id="bulbFacts" style="display:none">
+            It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
+            Save the environment switch to LED bulbs.
+        </p>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
         <table id="bulbvsTable" style="display:none">
             <colgroup>
@@ -107,10 +163,27 @@
     var compCurBulbs = [0, 0];
     var compLedBulbs = [0, 0];
     var compFilBulbs = [0, 0];
-    let width = screen.width
+    let width = screen.width;
+    let height = screen.height;
     var imgWidth = 0.07 * width;
     var imgHeightPerc = imgWidth / 142;
     var imgHeight = 0;
+    var total_power = 0;
+
+    document.addEventListener('fullscreenchange', function () {
+        console.info("full screen change");
+
+        if (document.fullscreenElement) {
+
+            document.getElementById("menuBar").style.display = "none";
+
+        } else {
+
+            document.getElementById("menuBar").style.display = "block";
+
+        }
+    });
+    document.onfullscreenchange = fullscreenchanged;
     //Class for the bikes
     class BLEDevice {
 
@@ -124,6 +197,11 @@
             })
                 .then(device => {
                     this.device = device;
+                    this.device.addEventListener('gattserverdisconnected', function () {
+
+                        reconnectBike(BikeNo);
+
+                    });
                     return this.device.gatt.connect();
                 })
                 .then(server => {
@@ -181,12 +259,26 @@
 
         async disConnectDevice() {
 
+
+
             await this.device.gatt.disconnect();
         }
 
         connectionDetails() {
 
-            return this.device.gatt.connected;
+            
+
+            if (typeof(this.device) === "undefined") {
+
+                return false;
+
+            } else {
+
+                return this.device.gatt.connected;
+
+            }
+
+            
 
         }
 
@@ -245,6 +337,38 @@
 
     }
 
+    async function recconnectBike(bikeNo) {
+
+        if (bikeNo == 1) {
+
+            await device.startConnection(bikeNo);
+
+            if (!device.connectionDetails) {
+
+                setTimeout(function () {
+
+                    recconnectBike(bikeNo);
+                }, 5000);
+
+            }
+
+        } else {
+
+            device2.startConnection(bikeNo);
+
+            if (!device2.connectionDetails) {
+
+                setTimeout(function () {
+
+                    recconnectBike(bikeNo);
+                }, 5000);
+
+            }
+
+        }
+
+    }
+
 
     async function testConnectBtn() {
         console.info("D1");
@@ -272,11 +396,45 @@
 
     }
 
+    
+
+    function fullscreenchanged(event){
+
+        console.info("full screen change");
+
+        if (document.fullscreenElement) {
+
+            document.getElementById("menuBar").style.display = "none";
+
+        } else {
+
+            document.getElementById("menuBar").style.display = "block";
+
+        }
+    }
+
+    function hideMenu() {
+        var elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem = window.top.document.body; //To break out of frame in IE
+            elem.msRequestFullscreen();
+        }
+        splashScreen();
+
+    }
+
     //Event handler for recieving gatt notifications and running of games
     function testchange(event, bikeNo) {
         console.info("pwr event")
         //const testvalue = event.target.value.getUint8(0);
         power = event.target.value.getInt8(2);
+        total_power += power;
         console.info('Power is ' + event.target.value.getInt8(2));
         if (bikeNo == 1) {
 
@@ -540,52 +698,57 @@
     }
 // Code for games menu goes here
 
+    function splashScreen() {
+
+        document.getElementById("splashScreenArea").style.display = "block";
+        document.getElementById("splashScreenImg").width = width;
+        document.getElementById("splashScreenImg").height = height;
+        document.getElementById("div test").style.display = "none";
+
+    }
+
     function start() {
+
+        document.getElementById("splashScreenArea").style.display = "none";
 
         document.getElementById("div test").style.display = "block";
 
-        for (i = 1; i < 4; i++) {
+        const tables = document.getElementsByClassName("Btn_table");
 
-            btnId = "Btn" + i.toString();
-            console.info(btnId);
-            document.getElementById(btnId).style.display = "block";
+        for (let i = 0; i < tables.length; i++) {
 
-        }
+            console.info("showing table");
+            tables[i].style.display = "block";
 
-        document.getElementById("Btn1").innerHTML = "Easy - Light Bulbs";
-        document.getElementById("Btn2").innerHTML = "Hard - Toasting Bread";
-        document.getElementById("Btn3").innerHTML = "Impossible - Boiling A Kettle";
-
-        document.getElementById("Btn1").onclick = function () {
-            lvlselected = 1;
-
-            console.info("Selected: 1");
-            selectBikes();
         };
-        document.getElementById("Btn2").onclick = function () {
-            lvlselected = 2;
-            console.info("Selected: 2");
-            selectBikes();
-        };
-        document.getElementById("Btn3").onclick = function () {
-            lvlselected = 3;
-            console.info("Selected: 3");
-            selectBikes();
-        };
+
+        document.getElementById("Btn1").style.display = "none";
+        document.getElementById("Btn2").style.display = "none";
+        document.getElementById("Btn3").style.display = "none";
+        document.getElementById("Btn1").innerHTML = "1";
+        document.getElementById("Btn2").innerHTML = "2";
+
     }
 
-    function selectBikes() {
+    function selectBikes(inLvl) {
 
         document.getElementById("Btn3").style.display = "none";
+        const tables = document.getElementsByClassName("Btn_table");
+        console.info("test here");
+        for (let i = 0; i < tables.length; i++) {
 
-        for (i = 1; i < 3; i++) {
+            console.info("removing table");
+            tables[i].style.display = "none";
 
-            btnId = "Btn" + i.toString();
-            console.info(btnId);
-            document.getElementById(btnId).style.display = "inline";
+        };
+        lvlselected = inLvl;
 
-        }
-
+        document.getElementById("instrTitle").style.display = "block";
+        document.getElementById("instrTitle").innerHTML = "Select Number of Bikes";
+        document.getElementById("Btn1").style.display = "inline";
+        document.getElementById("Btn2").style.display = "inline";
+        document.getElementById("Btn1").classList.add("bikeBtn");
+        document.getElementById("Btn2").classList.add("bikeBtn");
         document.getElementById("Btn1").innerHTML = "1";
         document.getElementById("Btn2").innerHTML = "2";
 
@@ -613,6 +776,9 @@
 
         }
 
+        document.getElementById("Btn1").classList.remove("bikeBtn");
+        document.getElementById("Btn2").classList.remove("bikeBtn");
+        document.getElementById("instrTitle").innerHTML = "Select Game Mode";
         document.getElementById("Btn1").innerHTML = "Co-operative";
         document.getElementById("Btn2").innerHTML = "Competitive";
         document.getElementById("Btn3").innerHTML = "Co-opetition - Same goals but competitive";
@@ -621,7 +787,7 @@
             modeSelected = 1;
 
             console.info("Selected: co-op");
-            dispInstructions();
+            //dispInstructions();
 
             startGame();
 
@@ -643,49 +809,76 @@
 
     function startGame() {
 
-        console.info("game started");
-        document.getElementById("div test").style.display = "none";
+        console.info("start game called");
+        document.getElementById("instrTitle").style.display = "none";
 
-        if (lvlselected == 1) {
+        if (noBikes == 2 && (!device.connectionDetails() || !device2.connectionDetails())) {
 
-            document.getElementById("bulbs").style.display = "block";
-            document.getElementById("timer").style.display = "block";
-            document.getElementById("bulbFacts").style.display = "none";
-            document.getElementById("bulbDescription").innerHTML = "How many LED bulbs can you power for 30 seconds?";
-            ledBulbs = 0;
-            filBulbs = 0;
-            bulbPhase = 0;
-            bulbDivisor = 6;
+            if (!device.connectionDetails() || !device2.connectionDetails()) {
+                console.info("disp instr 2 bikes")
+                dispInstructions();
 
-            timeExp = new Date(Date.now() + 30 * 1000);
-            if (modeSelected == 2) {
+            }
 
-                document.getElementById("bulbvsTable").style.display = "block";
+        } else if (!device.connectionDetails()) {
+            console.info("dispinstr 1 bike");
+            dispInstructions();
 
-                var srcImg = "{% static 'images/blank.png'%}";
-                imgHeight = imgHeightPerc * 241;
+        } else {
 
-                for (i = 0; i < 11; i++) {
+            console.info("game started");
+            document.getElementById("div test").style.display = "none";
+            document.getElementById("bulbDescription2").style.display = "none";
+            document.getElementById("divInstr").style.display = "none";
 
-                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
+            total_power = 0;
+
+            if (lvlselected == 1) {
+
+                document.getElementById("bulbs").style.display = "block";
+                document.getElementById("timer").style.display = "block";
+                document.getElementById("timer").innerHTML = "30s ";
+                document.getElementById("bulbFacts").style.display = "none";
+                document.getElementById("bulbDescription").innerHTML = "How many LED bulbs can you power for 30 seconds?";
+                ledBulbs = 0;
+                filBulbs = 0;
+                bulbPhase = 0;
+                bulbDivisor = 6;
+
+                timeExp = new Date(Date.now() + 30 * 1000);
+                if (modeSelected == 2) {
+
+                    document.getElementById("bulbvsTable").style.display = "block";
+
+                    var srcImg = "{% static 'images/blank.png'%}";
+                    imgHeight = imgHeightPerc * 241;
+
+                    for (i = 0; i < 11; i++) {
+
+                        document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
 
-                }
+                    }
 
-            };
+                };
 
-            //Level selected value of 2 is toaster game
-        } else if (lvlselected == 2) {
+                //Level selected value of 2 is toaster game
+            } else if (lvlselected == 2) {
 
-            //todo add toaster
+                //todo add toaster
 
-        } else if (lvlselected == 3) {
+            } else if (lvlselected == 3) {
 
-            //todo add kettle
+                //todo add kettle
+
+            }
+
+            inGame = true;
+
 
         }
+
         
-        inGame = true;
 
 
     }
@@ -695,6 +888,27 @@
         document.getElementById("div test").style.display = "none";
         document.getElementById("divInstr").style.display = "block";
 
+        if (noBikes == 2) {
+
+            if (!device.connectionDetails() || !device2.connectionDetails()) {
+
+                setTimeout(dispInstructions, 5000);
+
+            }
+
+        } else if (!device.connectionDetails()) {
+
+            setTimeout(dispInstructions, 5000);
+
+        } else {
+
+            //Will be called if correct bikes are connected
+            startGame();
+
+        }
+
+        
+        
     }
 
     // timer function
@@ -747,13 +961,24 @@
             curBulbs = 0;
             compCurBulbs = [0, 0];
             bulbPhase = 1;
-            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + ", how many filiment bulbs can you now power?";
+            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED bulbs, how many filiment bulbs can you now power?";
 
             timeExp = new Date(Date.now() + 5 * 1000);
             inGame = false;
         } else if (bulbPhase == 1 && distance < 0) {
 
             timeExp = new Date(Date.now() + 30 * 1000);
+            now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            distance = timeExp - now;
+
+            // Time calculations for minutes and seconds
+            minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the element with id="demo"
+            document.getElementById("timer").innerHTML = seconds + "s ";
             document.getElementById("timer").style.display = "block";
             document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
             bulbPhase += 1;
@@ -794,7 +1019,12 @@
             document.getElementById("bulbvsTable").style.display = "none";
             document.getElementById("bulbFacts").style.display = "block";
 
-            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " Filiment Bulbs";
+            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " Filiment Bulb. You generated a total of " + total_power + "W over the minute";
+            if (total_power > 100) {
+
+                document.getElementById("bulbDescription2").style.display = "block";
+
+            }
             bulbPhase = 3;
             inGame = false;
             timeExp = new Date(Date.now() + 10 * 1000);
@@ -803,9 +1033,12 @@
             document.getElementById("timer").style.display = "none";
             document.getElementById("bulbFacts").style.display = "none";
             document.getElementById("bulbs").style.display = "none";
+            document.getElementById("bulbDescription2").style.display = "none";
+            document.getElementById("bulbDescription").style.display = "none";
+
             inGame = false;
             bulbPhase = 0;
-            start();
+            splashScreen();
         }
         
     }, 1000);

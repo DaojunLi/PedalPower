@@ -4,11 +4,12 @@
     "\\pedalpower",
     "\\pedalpower\\pedalpower",
     "\\pedalpower\\static",
+    "\\pedalpower\\static\\css",
     "\\pedalpower\\static\\images",
     "\\pedalpower\\static\\js",
     "\\pedalpower\\templates",
     "\\pedalpower\\templates\\ppdisplay"
   ],
-  "SelectedNode": "\\pedalpower\\pedalpower\\settings.py",
+  "SelectedNode": "\\pedalpower\\static\\js\\connect.js",
   "PreviewInSolutionExplorer": false
 }
