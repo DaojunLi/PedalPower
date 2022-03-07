@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\pedalpower",
+    "\\pedalpower\\pedalpower",
+    "\\pedalpower\\static",
+    "\\pedalpower\\static\\css",
+    "\\pedalpower\\static\\images",
+    "\\pedalpower\\static\\js",
+    "\\pedalpower\\templates",
+    "\\pedalpower\\templates\\ppdisplay"
+  ],
+  "SelectedNode": "\\pedalpower\\static\\js\\connect.js",
+  "PreviewInSolutionExplorer": false
+}
