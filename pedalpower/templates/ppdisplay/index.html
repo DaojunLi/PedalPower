@@ -79,31 +79,32 @@
         <button id="Btn2" style="display: none" class="selectBtn">2</button>
         <button id="Btn3" style="display: none" class="selectBtn">Co-opetition</button>
     </div>
+    <div id="Bike_Set_Up" style="display:none"></div>
     <div id="divInstr" style="display:none">
         <div class="split left">
         <h1>Reconnecting Bikes!</h1>
         <h2> Step 1:</h2>
-        <p>Start Cycling</p>
+        <h3>Start Cycling</h3>
         <h2>Step 2:</h2>
-        <p>Wait for the menu to open as you cycle</p>
+        <h3>Wait for the menu to open as you cycle</h3>
         <h2>Step 3:</h2>
-        <p>Use the tick button to select quick start</p>
+        <h3>Use the tick button to select quick start</h3>
         </div  >
         <div class="split right">
-        <img src="{% static 'images/instrImg.PNG'%}" class="instrImg" />
+        <img src="{% static 'images/instrImg.png'%}" class="instrImg" />
         </div>
 
     </div>
     <div id="bulbs" style="display: none">
 
         <h1 id="bulbDescription">How many LED bulbs can you power for 30 seconds?</h1>
-        <p id="bulbDescription2" stle="display:none">That's enough to power the lights in treehouse for that time!</p>
+        <h2 id="bulbDescription2" stle="display:none">That's enough to power the lights in treehouse for that time!</h2>
         <h2>Bike paused? Select resume with the tick button on the bike</h2>
-        <p id="timer"></p>
-        <p id="bulbFacts" style="display:none">
+        <h1 id="timer"></h1>
+        <h3 id="bulbFacts" style="display:none">
             It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
             Save the environment switch to LED bulbs.
-        </p>
+        </h3>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
         <table id="bulbvsTable" style="display:none">
             <colgroup>
@@ -198,7 +199,10 @@
                     this.device = device;
                     this.device.addEventListener('gattserverdisconnected', function () {
 
-                        reconnectBike(BikeNo);
+                        setTimeout(function () {
+
+                            reconnectBike(BikeNo);
+                        }, 2000);
 
                     });
                     return this.device.gatt.connect();
@@ -336,17 +340,19 @@
 
     }
 
-    async function recconnectBike(bikeNo) {
+    async function reconnectBike(bikeNo) {
+
+        console.info("attemptin reconnect");
 
         if (bikeNo == 1) {
-
+            console.info("attempting bike 1 reconnect");
             await device.startConnection(bikeNo);
 
-            if (!device.connectionDetails) {
-
+            if (!device.connectionDetails()) {
+                console.info("failed connection");
                 setTimeout(function () {
 
-                    recconnectBike(bikeNo);
+                    reconnectBike(bikeNo);
                 }, 5000);
 
             }
@@ -355,11 +361,11 @@
 
             device2.startConnection(bikeNo);
 
-            if (!device2.connectionDetails) {
+            if (!device2.connectionDetails()) {
 
                 setTimeout(function () {
 
-                    recconnectBike(bikeNo);
+                    reconnectBike(bikeNo);
                 }, 5000);
 
             }
