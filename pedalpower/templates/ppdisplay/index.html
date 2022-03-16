@@ -8,7 +8,7 @@
         
     </style>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/Blue.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/BlackGold.css' %}" />
 </head>
 
 {% load static %}
@@ -90,7 +90,7 @@
         <p>Use the tick button to select quick start</p>
         </div  >
         <div class="split right">
-        <img src="{% static 'images/instrImg.PNG'%}" class="instrImg" />
+        <img src="{% static 'images/goldinstr.png'%}" class="instrImg" />
         </div>
 
     </div>
@@ -198,7 +198,10 @@
                     this.device = device;
                     this.device.addEventListener('gattserverdisconnected', function () {
 
-                        reconnectBike(BikeNo);
+                        setTimeout(function () {
+
+                            reconnectBike(BikeNo);
+                        }, 2000);
 
                     });
                     return this.device.gatt.connect();
@@ -336,17 +339,19 @@
 
     }
 
-    async function recconnectBike(bikeNo) {
+    async function reconnectBike(bikeNo) {
+
+        console.info("attemptin reconnect");
 
         if (bikeNo == 1) {
-
+            console.info("attempting bike 1 reconnect");
             await device.startConnection(bikeNo);
 
-            if (!device.connectionDetails) {
-
+            if (!device.connectionDetails()) {
+                console.info("failed connection");
                 setTimeout(function () {
 
-                    recconnectBike(bikeNo);
+                    reconnectBike(bikeNo);
                 }, 5000);
 
             }
@@ -355,11 +360,11 @@
 
             device2.startConnection(bikeNo);
 
-            if (!device2.connectionDetails) {
+            if (!device2.connectionDetails()) {
 
                 setTimeout(function () {
 
-                    recconnectBike(bikeNo);
+                    reconnectBike(bikeNo);
                 }, 5000);
 
             }
