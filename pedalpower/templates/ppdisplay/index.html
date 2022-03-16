@@ -8,7 +8,7 @@
         
     </style>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/BlackGold.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/Blue.css' %}" />
 </head>
 
 {% load static %}
@@ -79,31 +79,32 @@
         <button id="Btn2" style="display: none" class="selectBtn">2</button>
         <button id="Btn3" style="display: none" class="selectBtn">Co-opetition</button>
     </div>
+    <div id="Bike_Set_Up" style="display:none"></div>
     <div id="divInstr" style="display:none">
         <div class="split left">
         <h1>Reconnecting Bikes!</h1>
         <h2> Step 1:</h2>
-        <p>Start Cycling</p>
+        <h3>Start Cycling</h3>
         <h2>Step 2:</h2>
-        <p>Wait for the menu to open as you cycle</p>
+        <h3>Wait for the menu to open as you cycle</h3>
         <h2>Step 3:</h2>
-        <p>Use the tick button to select quick start</p>
+        <h3>Use the tick button to select quick start</h3>
         </div  >
         <div class="split right">
-        <img src="{% static 'images/goldinstr.png'%}" class="instrImg" />
+        <img src="{% static 'images/instrImg.png'%}" class="instrImg" />
         </div>
 
     </div>
     <div id="bulbs" style="display: none">
 
         <h1 id="bulbDescription">How many LED bulbs can you power for 30 seconds?</h1>
-        <p id="bulbDescription2" stle="display:none">That's enough to power the lights in treehouse for that time!</p>
+        <h2 id="bulbDescription2" stle="display:none">That's enough to power the lights in treehouse for that time!</h2>
         <h2>Bike paused? Select resume with the tick button on the bike</h2>
-        <p id="timer"></p>
-        <p id="bulbFacts" style="display:none">
+        <h1 id="timer"></h1>
+        <h3 id="bulbFacts" style="display:none">
             It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
             Save the environment switch to LED bulbs.
-        </p>
+        </h3>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
         <table id="bulbvsTable" style="display:none">
             <colgroup>
