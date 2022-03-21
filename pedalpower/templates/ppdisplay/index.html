@@ -79,7 +79,25 @@
         <button id="Btn2" style="display: none" class="selectBtn">2</button>
         <button id="Btn3" style="display: none" class="selectBtn">Co-opetition</button>
     </div>
-    <div id="Bike_Set_Up" style="display:none"></div>
+    <div id="bikeInstr" style="display:none">
+        <h1>Set up the bikes to suit you</h1>
+        <div>
+            <div class="left">
+                <h2> Step 1:</h2>
+                <h3>Adjust the seats</h3>
+                <img src="{% static 'images/seatAdj.png'%}" class="setUpInstrImg" />
+
+            </div>
+            <div class="right">
+                <h2>Step 2:</h2>
+                <h3>Set the resistance you're comfortable with</h3>
+                <h3>(Has no effect on difficulty, for your comfort)</h3>
+                <img src="{% static 'images/resitanceImg.png'%}" class="setUpInstrImg" />
+            </div>
+        </div>
+        <button class="selectBtn" onclick="startGame()">Start!</button>
+
+    </div>
     <div id="divInstr" style="display:none">
         <div class="split left">
         <h1>Reconnecting Bikes!</h1>
@@ -605,7 +623,7 @@
 
 
                 for (i = 0; i < bulbs; i++) {
-
+                    console.info("adding bulb " + i.toString());
                     document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src=' + srcImg + ' alt="led" width = "'+ imgWidth.toString() +'" height ="' + imgHeight.toString() +'"  />';
 
                 }
@@ -761,7 +779,7 @@
             noBikes = 1;
             modeSelected = 0;
             console.info("Selected bikes: 1");
-            startGame();
+            bikeSetup();
 
         };
         document.getElementById("Btn2").onclick = function () {
@@ -794,7 +812,7 @@
             console.info("Selected: co-op");
             //dispInstructions();
 
-            startGame();
+            bikeSetup();
 
         };
         document.getElementById("Btn2").onclick = function () {
@@ -802,7 +820,7 @@
 
             console.info("Selected: comp");
 
-            startGame();
+            bikeSetup();
         };
         document.getElementById("Btn3").onclick = function () {
             modeSelected = 3;
@@ -812,10 +830,20 @@
 
     }
 
+    function bikeSetup() {
+
+        document.getElementById("instrTitle").style.display = "none";
+        document.getElementById("div test").style.display = "none";
+        document.getElementById("bikeInstr").style.display = "block";
+
+
+    }
+
     function startGame() {
 
         console.info("start game called");
         document.getElementById("instrTitle").style.display = "none";
+        document.getElementById("bikeInstr").style.display = "none";
 
         if (noBikes == 2 && (!device.connectionDetails() || !device2.connectionDetails())) {
 
@@ -892,6 +920,7 @@
 
         document.getElementById("div test").style.display = "none";
         document.getElementById("divInstr").style.display = "block";
+        document.getElementById("bikeInstr").style.display = "none";
 
         if (noBikes == 2) {
 
@@ -1032,7 +1061,7 @@
             }
             bulbPhase = 3;
             inGame = false;
-            timeExp = new Date(Date.now() + 10 * 1000);
+            timeExp = new Date(Date.now() + 20 * 1000);
         } else if (bulbPhase == 3 && distance < 0) {
 
             document.getElementById("timer").style.display = "none";
