@@ -10,6 +10,6 @@
     "\\pedalpower\\templates",
     "\\pedalpower\\templates\\ppdisplay"
   ],
-  "SelectedNode": "\\pedalpower\\static\\js\\connect.js",
+  "SelectedNode": "\\pedalpower\\pedalpower\\settings.py",
   "PreviewInSolutionExplorer": false
 }

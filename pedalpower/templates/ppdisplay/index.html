@@ -223,29 +223,8 @@
                         }, 2000);
 
                     });
-                    return this.device.gatt.connect();
+                    this.startConnection(BikeNo);
                 })
-                .then(server => {
-                    // Getting service
-                    console.info("getting service")
-                    return server.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
-                }).then(service => {
-                    // Getting Characteristic…
-                    console.info("getting characteristic")
-                    return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
-                }).then(characteristic => characteristic.startNotifications())
-                .then(characteristic => {
-                    // Set up event listener for when characteristic value changes.
-                    console.info("setting up listener")
-                    characteristic.addEventListener('characteristicvaluechanged',
-                        function () {
-                            testchange(event, BikeNo);});
-                    // Reading value
-                    console.info("Reading value")
-                    //return characteristic.readValue();
-                }).catch(error => { console.error(error); });
-            console.info("Done")
-
         }
 
         async startConnection(BikeNo) {
