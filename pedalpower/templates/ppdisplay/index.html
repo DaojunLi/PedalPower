@@ -990,12 +990,13 @@
                     document.getElementById("bulbDescription").innerHTML = "It's neck and neck! You both powered:" + compLedBulbs + "LED bulbs";
 
                 }
+            }
 
                 bulbPhase = 1;
 
                 timeExp = new Date(Date.now() + 5 * 1000);
                 inGame = false;
-            }
+ 
         } else if (bulbPhase == 1 && distance < 0) {
 
             timeExp = new Date(Date.now() + 30 * 1000);
