@@ -80,11 +80,11 @@
         <button id="Btn3" style="display: none" class="selectBtn">Co-opetition</button>
     </div>
     <div id="bikeInstr" style="display:none">
-        <h1>Set up the bikes to suit you</h1>
+        <h2>Set up the bikes to suit you</h2>
         <div>
             <div class="left">
                 <h2> Step 1:</h2>
-                <h3>Adjust the seats</h3>
+                <h3>Adjust the seat</h3>
                 <img src="{% static 'images/seatAdj.png'%}" class="setUpInstrImg" />
 
             </div>
@@ -139,9 +139,9 @@
                 <col class="bulbCell" />
             </colgroup>
             <tr>
-                <th colspan="5">Bike 1</th>
-                <th>VS</th>
-                <th colspan="5">Bike 2</th>
+                <th class ="vs_th" colspan="5">Bike 1</th>
+                <th class ="vs_th">VS</th>
+                <th class ="vs_th" colspan="5">Bike 2</th>
             </tr>
             <tr>
                 <td></td>
@@ -577,7 +577,7 @@
     function compBulb(bikeNo, power) {
 
         bulbs = Math.ceil(power / bulbDivisor);
-
+        var blankImg = "{% static 'images/blank.png'%}";
         if (bulbPhase == 0) {
 
             srcImg = "{% static 'images/LED.PNG'%}";
@@ -649,24 +649,23 @@
             };
 
         } else if (bulbs > 5 && bikeNo == 1) {
+            
 
             if (compCurBulbs[bikeNo - 1] > 5) {
 
-                document.getElementById("bulbvsTable").rows[1].cells[4].innerHTML = bulbs;
+                document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = bulbs;
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             } else if (compCurBulbs[bikeNo - 1] <= 5) {
 
                 for (i = 0; i <= compCurBulbs[bikeNo - 1]; i++) {
                     console.info("deleteing: "+(compCurBulbs[bikeNo - 1]).toString() + "led");
-                    document.getElementById((compCurBulbs[bikeNo - 1]).toString() + "led").remove();
-
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + blankImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
                 }
 
                 document.getElementById("bulbvsTable").rows[1].cells[2].innerHTML = '<img id="1led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'" />';
-                document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = "x";
-                document.getElementById("bulbvsTable").rows[1].cells[4].innerHTML = bulbs;
+                document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = "<h2>X" + bulbs + "</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             }
@@ -682,14 +681,12 @@
 
                 for (i = 0; i <= compCurBulbs[bikeNo - 1]; i++) {
                     console.info("deleteing: " + (compCurBulbs[bikeNo - 1]+6).toString() + "led");
-                    document.getElementById((compCurBulbs[bikeNo - 1]+6).toString() + "led").remove();
-
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + blankImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
                 }
 
-                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'"/>';
-                document.getElementById("bulbvsTable").rows[1].cells[9].innerHTML = "x";
-                document.getElementById("bulbvsTable").rows[1].cells[10].innerHTML = bulbs;
+                document.getElementById("bulbvsTable").rows[1].cells[7].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'"/>';
+                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = "<h2>X" + bulbs +"</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             }
