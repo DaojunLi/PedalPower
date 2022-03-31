@@ -33,6 +33,10 @@
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
+.vs_th {
+    color: #005398;
+    font-size: 30px;
+}
 body{
     margin:0;
     padding:0;
@@ -106,7 +110,7 @@ h3 {
     text-align: center;
     font-size: 30px;
 }
-h3 {
+h4 {
     color: #005398;
     text-align: center;
     font-size: 20px;
