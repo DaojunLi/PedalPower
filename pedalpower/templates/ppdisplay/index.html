@@ -186,7 +186,7 @@
     var imgHeightPerc = imgWidth / 142;
     var imgHeight = 0;
     var total_power = 0;
-    var comp_total_power = 0;
+    var comp_total_power = [0,0];
 
     document.addEventListener('fullscreenchange', function () {
         console.info("full screen change");
@@ -435,9 +435,9 @@
     function testchange(event, bikeNo) {
         console.info("pwr event")
         //const testvalue = event.target.value.getUint8(0);
-        power = event.target.value.getInt8(2);
+        power = event.target.value.getUint8(2, true);
 
-        console.info('Power is ' + event.target.value.getInt8(2));
+        console.info('Power is ' + power);
         if (bikeNo == 1) {
 
             bike1pwr = power;
