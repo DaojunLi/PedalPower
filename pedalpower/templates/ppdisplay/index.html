@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <title>Btest</title>
     <style>
-        
     </style>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/Blue.css' %}" />
@@ -28,7 +27,7 @@
 
         <!--<img class="splashScreenImg" id="splashScreenImg" src="{% static 'images/splash1.PNG'%}"onclick="start()"/>-->
     </div>
-    
+
     <div id="div test" style="display:none">
         <div id="btn_table_area">
             <table id="Btn1_table" class="Btn_table">
@@ -39,7 +38,7 @@
                     <td class="btn_td">
                         <p class="btn_para">
                             How many LED light bulbs can you power for 30 seconds?
-                            Can you power the same number of filiment bulbs for 30 seconds too?
+                            Can you power the same number of filament bulbs for 30 seconds too?
                         </p>
                         <button class="start_btn" style="display:block" onclick="selectBikes(1)">Start!</button>
                     </td>
@@ -95,21 +94,21 @@
                 <img src="{% static 'images/resitanceImg.png'%}" class="setUpInstrImg" />
             </div>
         </div>
-        <button class="selectBtn" onclick="startGame()">Start!</button>
+        <button class="selectBtn" onclick="startGame()">Click to Start!</button>
 
     </div>
     <div id="divInstr" style="display:none">
         <div class="split left">
-        <h1>Reconnecting Bikes!</h1>
-        <h2> Step 1:</h2>
-        <h3>Start Cycling</h3>
-        <h2>Step 2:</h2>
-        <h3>Wait for the menu to open as you cycle</h3>
-        <h2>Step 3:</h2>
-        <h3>Use the tick button to select quick start</h3>
-        </div  >
+            <h1>Reconnecting Bikes!</h1>
+            <h2> Step 1:</h2>
+            <h3>Start Cycling</h3>
+            <h2>Step 2:</h2>
+            <h3>Wait for the menu to open as you cycle</h3>
+            <h2>Step 3:</h2>
+            <h3>Use the tick button to select quick start</h3>
+        </div>
         <div class="split right">
-        <img src="{% static 'images/instrImg.png'%}" class="instrImg" />
+            <img src="{% static 'images/instrImg.png'%}" class="instrImg" />
         </div>
 
     </div>
@@ -120,7 +119,7 @@
         <h2>Bike paused? Select resume with the tick button on the bike</h2>
         <h1 id="timer"></h1>
         <h3 id="bulbFacts" style="display:none">
-            It takes between 5 and 7 times the ammount of power to power filiment light bulbs compared to their LED equivilent.
+            It takes between 5 and 7 times the ammount of power to power filament light bulbs compared to their LED equivilent.
             Save the environment switch to LED bulbs.
         </h3>
         <!--<img id="0led" src="{% static 'images/LED.PNG'%}" alt="led" />-->
@@ -139,9 +138,9 @@
                 <col class="bulbCell" />
             </colgroup>
             <tr>
-                <th class ="vs_th" colspan="5">Bike 1</th>
-                <th class ="vs_th">VS</th>
-                <th class ="vs_th" colspan="5">Bike 2</th>
+                <th class="vs_th" colspan="5">Bike 1</th>
+                <th class="vs_th">VS</th>
+                <th class="vs_th" colspan="5">Bike 2</th>
             </tr>
             <tr>
                 <td></td>
@@ -187,6 +186,7 @@
     var imgHeightPerc = imgWidth / 142;
     var imgHeight = 0;
     var total_power = 0;
+    var comp_total_power = [0,0];
 
     document.addEventListener('fullscreenchange', function () {
         console.info("full screen change");
@@ -236,23 +236,23 @@
                     console.info("getting service");
                     return reserver.getPrimaryService('00001818-0000-1000-8000-00805f9b34fb');
                 }).then(service => {
-                // Getting Characteristic…
-                console.info(service)
-                return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
-            }).then(characteristic => characteristic.startNotifications())
-            .then(characteristic => {
-                // Set up event listener for when characteristic value changes.
-                console.info("setting up listener")
+                    // Getting Characteristic…
+                    console.info(service)
+                    return service.getCharacteristic('00002a63-0000-1000-8000-00805f9b34fb');
+                }).then(characteristic => characteristic.startNotifications())
+                .then(characteristic => {
+                    // Set up event listener for when characteristic value changes.
+                    console.info("setting up listener")
 
-                characteristic.addEventListener('characteristicvaluechanged',
-                    function () {
-                        testchange(event, BikeNo);
-                    });
+                    characteristic.addEventListener('characteristicvaluechanged',
+                        function () {
+                            testchange(event, BikeNo);
+                        });
 
-                // Reading value
-                console.info("Reading value")
-                //return characteristic.readValue();
-            }).catch(error => { console.error(error); });
+                    // Reading value
+                    console.info("Reading value")
+                    //return characteristic.readValue();
+                }).catch(error => { console.error(error); });
             console.info("Done");
 
         }
@@ -266,9 +266,9 @@
 
         connectionDetails() {
 
-            
 
-            if (typeof(this.device) === "undefined") {
+
+            if (typeof (this.device) === "undefined") {
 
                 return false;
 
@@ -278,7 +278,7 @@
 
             }
 
-            
+
 
         }
 
@@ -289,7 +289,7 @@
     const device2 = new BLEDevice();
 
     // Code for connection buttons goes here
-    async function connectBike(BikeNo){
+    async function connectBike(BikeNo) {
 
         if (BikeNo == 1) {
 
@@ -398,9 +398,9 @@
 
     }
 
-    
 
-    function fullscreenchanged(event){
+
+    function fullscreenchanged(event) {
 
         console.info("full screen change");
 
@@ -435,9 +435,9 @@
     function testchange(event, bikeNo) {
         console.info("pwr event")
         //const testvalue = event.target.value.getUint8(0);
-        power = event.target.value.getInt8(2);
-        total_power += power;
-        console.info('Power is ' + event.target.value.getInt8(2));
+        power = event.target.value.getUint8(2, true);
+
+        console.info('Power is ' + power);
         if (bikeNo == 1) {
 
             bike1pwr = power;
@@ -514,7 +514,7 @@
 
             }
 
-            
+
 
         }
     }
@@ -524,7 +524,7 @@
     function soloCoopBulb(power) {
 
 
-
+        total_power += power;
         bulbs = Math.ceil(power / bulbDivisor);
 
         if (bulbPhase == 0) {
@@ -535,7 +535,7 @@
 
         } else {
 
-            srcImg = "{% static 'images/Filiment.PNG'%}";
+            srcImg = "{% static 'images/Filament.PNG'%}";
 
             if (filBulbs < bulbs) { filBulbs = bulbs; }
 
@@ -562,8 +562,8 @@
 
             for (i = 1; i <= delBulbs; i++) {
                 console.info((curBulbs - i).toString() + "led");
-               document.getElementById((curBulbs - i).toString()+"led").remove();
-                
+                document.getElementById((curBulbs - i).toString() + "led").remove();
+
 
             }
 
@@ -578,17 +578,19 @@
 
         bulbs = Math.ceil(power / bulbDivisor);
         var blankImg = "{% static 'images/blank.png'%}";
+        comp_total_power[bikeNo - 1] += power;
+
         if (bulbPhase == 0) {
 
             srcImg = "{% static 'images/LED.PNG'%}";
 
             if (compLedBulbs[bikeNo - 1] < bulbs) { compLedBulbs[bikeNo - 1] = bulbs; }
-            imgHeight = imgHeightPerc*241;
+            imgHeight = imgHeightPerc * 241;
 
 
         } else {
 
-            srcImg = "{% static 'images/Filiment.PNG'%}";
+            srcImg = "{% static 'images/Filament.PNG'%}";
 
             if (compFilBulbs[bikeNo - 1] < bulbs) { compFilBulbs[bikeNo - 1] = bulbs; }
             imgHeight = imgHeightPerc * 192;
@@ -603,7 +605,7 @@
 
                 for (i = 0; i < bulbs; i++) {
                     console.info("adding bulb " + i.toString());
-                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src=' + srcImg + ' alt="led" width = "'+ imgWidth.toString() +'" height ="' + imgHeight.toString() +'"  />';
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + i.toString() + 'led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '"  />';
 
                 }
 
@@ -627,9 +629,9 @@
             } else if (compCurBulbs[bikeNo - 1] < bulbs && bikeNo == 2) {
 
 
-                for (i = 10; i > 10- bulbs; i--) {
+                for (i = 10; i > 10 - bulbs; i--) {
                     console.info("adding bulb " + i.toString());
-                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + (i).toString() + 'led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'" />';
+                    document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img id="' + (i).toString() + 'led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
                 }
 
@@ -637,7 +639,7 @@
 
             } else if (compCurBulbs[bikeNo - 1] > bulbs && bikeNo == 2) {
 
-                for (i = 11 - compCurBulbs[bikeNo - 1]; i < 11-bulbs; i++) {
+                for (i = 11 - compCurBulbs[bikeNo - 1]; i < 11 - bulbs; i++) {
                     console.info((i).toString() + "led");
                     document.getElementById((i).toString() + "led").remove();
 
@@ -649,22 +651,22 @@
             };
 
         } else if (bulbs > 5 && bikeNo == 1) {
-            
+
 
             if (compCurBulbs[bikeNo - 1] > 5) {
 
-                document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = bulbs;
+                document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = "<h2>X" + bulbs + "</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             } else if (compCurBulbs[bikeNo - 1] <= 5) {
 
                 for (i = 0; i <= compCurBulbs[bikeNo - 1]; i++) {
-                    console.info("deleteing: "+(compCurBulbs[bikeNo - 1]).toString() + "led");
+                    console.info("deleteing: " + (compCurBulbs[bikeNo - 1]).toString() + "led");
                     document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + blankImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
                 }
 
-                document.getElementById("bulbvsTable").rows[1].cells[2].innerHTML = '<img id="1led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'" />';
+                document.getElementById("bulbvsTable").rows[1].cells[2].innerHTML = '<img id="1led" src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
                 document.getElementById("bulbvsTable").rows[1].cells[3].innerHTML = "<h2>X" + bulbs + "</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
@@ -674,19 +676,19 @@
 
             if (compCurBulbs[bikeNo - 1] > 5) {
 
-                document.getElementById("bulbvsTable").rows[1].cells[10].innerHTML = bulbs;
+                document.getElementById("bulbvsTable").rows[1].cells[10].innerHTML = "<h2>X" + bulbs + "</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             } else if (compCurBulbs[bikeNo - 1] <= 5) {
 
                 for (i = 0; i <= compCurBulbs[bikeNo - 1]; i++) {
-                    console.info("deleteing: " + (compCurBulbs[bikeNo - 1]+6).toString() + "led");
+                    console.info("deleteing: " + (compCurBulbs[bikeNo - 1] + 6).toString() + "led");
                     document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + blankImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
 
                 }
 
-                document.getElementById("bulbvsTable").rows[1].cells[7].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() +'"/>';
-                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = "<h2>X" + bulbs +"</h2>";
+                document.getElementById("bulbvsTable").rows[1].cells[7].innerHTML = '<img id="6led" src=' + srcImg + ' alt="led"  width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '"/>';
+                document.getElementById("bulbvsTable").rows[1].cells[8].innerHTML = "<h2>X" + bulbs + "</h2>";
                 compCurBulbs[bikeNo - 1] = bulbs;
 
             }
@@ -695,7 +697,7 @@
 
 
     }
-// Code for games menu goes here
+    // Code for games menu goes here
 
     function splashScreen() {
 
@@ -703,12 +705,14 @@
         document.getElementById("splashScreenImg").width = width;
         document.getElementById("splashScreenImg").height = height;
         document.getElementById("div test").style.display = "none";
+        document.getElementById("bikeInstr").style.display = "none";
 
     }
 
     function start() {
 
         document.getElementById("splashScreenArea").style.display = "none";
+        document.getElementById("bikeInstr").style.display = "none";
 
         document.getElementById("div test").style.display = "block";
 
@@ -743,6 +747,7 @@
         lvlselected = inLvl;
 
         document.getElementById("instrTitle").style.display = "block";
+        document.getElementById("bikeInstr").style.display = "none";
         document.getElementById("instrTitle").innerHTML = "Select Number of Bikes";
         document.getElementById("Btn1").style.display = "inline";
         document.getElementById("Btn2").style.display = "inline";
@@ -781,6 +786,8 @@
         document.getElementById("Btn1").innerHTML = "Co-operative";
         document.getElementById("Btn2").innerHTML = "Competitive";
         document.getElementById("Btn3").innerHTML = "Co-opetition - Same goals but competitive";
+        document.getElementById("bikeInstr").style.display = "none";
+        document.getElementById("bikeInstr").style.display = "none";
 
         document.getElementById("Btn1").onclick = function () {
             modeSelected = 1;
@@ -846,6 +853,7 @@
 
                 document.getElementById("bulbs").style.display = "block";
                 document.getElementById("timer").style.display = "block";
+                document.getElementById("bulbDescription").style.display = "block";
                 document.getElementById("timer").innerHTML = "30s ";
                 document.getElementById("bulbFacts").style.display = "none";
                 document.getElementById("bulbDescription").innerHTML = "How many LED bulbs can you power for 30 seconds?";
@@ -887,7 +895,7 @@
 
         }
 
-        
+
 
 
     }
@@ -917,14 +925,14 @@
 
         }
 
-        
-        
+
+
     }
 
     // timer function
 
     var x = setInterval(function () {
-        
+
         // Get today's date and time
         var now = new Date().getTime();
 
@@ -942,39 +950,53 @@
 
         }
 
-        
-        if (inGame && bulbPhase == 0 && distance < 0) {
+        if (lvlselected == 1 && distance < 0) {
+
+            bulbTimer(distance);
+
+        }
+
+
+
+    }, 1000);
+
+    function bulbTimer(distance) {
+
+        if (inGame && bulbPhase == 0) {
             try {
                 document.getElementById("timer").style.display = "none";
             } catch (e) {
 
             }
 
-            for (i = 0; i <= curBulbs; i++) {
-                console.info(i.toString() + "led");
-                try {
-                    document.getElementById(i.toString() + "led").remove();
-                } catch (e) {
+            if (modeSelected <= 1) {
+                soloBulbClear();
+                document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED bulbs, how many filament bulbs can you now power?";
+
+            } else if (modeSelected == 2) {
+
+                compBulbClear();
+
+                if (compLedBulbs[0] > compLedBulbs[1]) {
+
+                    document.getElementById("bulbDescription").innerHTML = "Player 1 is winning! They managed to power " + compLedBulbs[0] + "LED Bulbs <br> Player 2 powered " + compLedBulbs[1] + "LED Bulbs";
+
+                } else if (compLedBulbs[1] > compLedBulbs[0]) {
+
+                    document.getElementById("bulbDescription").innerHTML = "Player 1 is winning! They managed to power " + compLedBulbs[0] + "LED Bulbs <br> Player 2 powered " + compLedBulbs[1] + "LED Bulbs";
+
+                } else {
+
+                    document.getElementById("bulbDescription").innerHTML = "It's neck and neck! You both powered:" + compLedBulbs + "LED bulbs";
 
                 }
-
-            };
-            var srcImg = "{% static 'images/blank.png'%}";
-            imgHeight = imgHeightPerc * 241;
-
-            for (i = 0; i < 11; i++) {
-
-                document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
-
-
             }
-            curBulbs = 0;
-            compCurBulbs = [0, 0];
-            bulbPhase = 1;
-            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED bulbs, how many filiment bulbs can you now power?";
 
-            timeExp = new Date(Date.now() + 5 * 1000);
-            inGame = false;
+                bulbPhase = 1;
+
+                timeExp = new Date(Date.now() + 5 * 1000);
+                inGame = false;
+ 
         } else if (bulbPhase == 1 && distance < 0) {
 
             timeExp = new Date(Date.now() + 30 * 1000);
@@ -990,7 +1012,7 @@
             // Display the result in the element with id="demo"
             document.getElementById("timer").innerHTML = seconds + "s ";
             document.getElementById("timer").style.display = "block";
-            document.getElementById("bulbDescription").innerHTML = "How many Filiment bulbs can you power for 30 seconds?";
+            document.getElementById("bulbDescription").innerHTML = "How many filament bulbs can you power for 30 seconds?";
             bulbPhase += 1;
             inGame = true;
             bulbDivisor = 40
@@ -1002,34 +1024,37 @@
 
             }
 
-            for (i = 0; i < curBulbs; i++) {
-                console.info(i.toString() + "led");
-                try {
-                    document.getElementById(i.toString() + "led").remove();
-                } catch (e) {
+            if (modeSelected <= 1) {
+                soloBulbClear();
+                document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " filament Bulb. You generated a total of " + total_power + "W over the minute";
+
+            } else if (modeSelected == 2) {
+
+                compBulbClear();
+
+                if (comp_total_power[0] > comp_total_power[1]) {
+
+                    document.getElementById("bulbDescription").innerHTML = "Player 1 wins generating  " + comp_total_power[0] + " W over the minute! <br> Player 1 powered " + compLedBulbs[0] + "LED Bulbs and " + compFilBulbs[0] + " filament Bulbs" + "<br> Player 2 powered " + compLedBulbs[1] + "LED Bulbs and " + compFilBulbs[1] + " filament Bulbs";
+
+                } else if (comp_total_power[1] > comp_total_power[0]) {
+
+                    document.getElementById("bulbDescription").innerHTML = "Player 2 wins generating  " + comp_total_power[1] + " W over the minute! <br> Player 2 powered " + compLedBulbs[1] + "LED Bulbs and " + compFilBulbs[1] + " filament Bulbs" + "<br> Player 1 powered " + compLedBulbs[0] + "LED Bulbs and " + compFilBulbs[0] + " filament Bulbs";
+
+                } else {
+
+                    document.getElementById("bulbDescription").innerHTML = "It's a draw! You each generated  " + comp_total_power[0] + " W over the minute! <br> Player 1 powered " + compLedBulbs[0] + "LED Bulbs and " + compFilBulbs[0] + " filament Bulbs" + "<br> Player 2 powered " + compLedBulbs[1] + "LED Bulbs and " + compFilBulbs[1] + " filament Bulbs";
+
 
                 }
 
-            };
-
-            var srcImg = "{% static 'images/blank.png'%}";
-            imgHeight = imgHeightPerc * 241;
-
-            for (i = 0; i < 11; i++) {
-
-                document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
-
 
             }
-            curBulbs = 0;
-            compCurBulbs = [0, 0];
-            
+
 
             document.getElementById("timer").style.display = "none";
             document.getElementById("bulbvsTable").style.display = "none";
             document.getElementById("bulbFacts").style.display = "block";
 
-            document.getElementById("bulbDescription").innerHTML = "You managed to power " + ledBulbs + " LED Bulbs and " + filBulbs + " Filiment Bulb. You generated a total of " + total_power + "W over the minute";
             if (total_power > 100) {
 
                 document.getElementById("bulbDescription2").style.display = "block";
@@ -1050,7 +1075,39 @@
             bulbPhase = 0;
             splashScreen();
         }
-        
-    }, 1000);
+
+    }
+
+    function soloBulbClear() {
+
+        for (i = 0; i <= curBulbs; i++) {
+            console.info(i.toString() + "led");
+            try {
+                document.getElementById(i.toString() + "led").remove();
+            } catch (e) {
+
+            }
+
+        };
+
+        curBulbs = 0;
+
+    }
+
+    function compBulbClear() {
+
+        var srcImg = "{% static 'images/blank.png'%}";
+        imgHeight = imgHeightPerc * 241;
+
+        for (i = 0; i < 11; i++) {
+
+            document.getElementById("bulbvsTable").rows[1].cells[i].innerHTML = '<img src=' + srcImg + ' alt="led" width = "' + imgWidth.toString() + '" height ="' + imgHeight.toString() + '" />';
+
+
+        }
+
+        compCurBulbs = [0, 0];
+
+    }
 
 </script>
