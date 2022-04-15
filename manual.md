@@ -4,7 +4,7 @@ For hosting the system locally it will require anaconda and an anaconda environm
 
 ![Anaconda libraries](condaConfig.PNG)
 
-From here with the environment activated navigate to the directory you wish to store the project and clone it from the github repository or navigate to the location it is stored at. Once in the directory navigate to "\textbackslash PedalPower\textbackslash pedalpower" and use the command: "python manage.py runserver". This will run the project on the localhost and will be accessible at \url{http://127.0.0.1:8000/display}.
+From here with the environment activated navigate to the directory you wish to store the project and clone it from the github repository or navigate to the location it is stored at. Once in the directory navigate to "\textbackslash PedalPower\textbackslash pedalpower" and use the command: "python manage.py runserver". This will run the project on the localhost and will be accessible at http://127.0.0.1:8000/display.
 
 Once in the system the row of buttons along the top of the screen allow for connecting of up to two bikes and to provide connection details, forced re-connection and disconnection. All outputs from such buttons can be viewed in the browsers output console. If using windows 10 on wards ensure the device is using Bluetooth 5 or above. If on Linux and earlier versions of Windows OS, enable the \#experimental-web-platform-features flag in about://flags to ensure the Web Bluetooth API works. The API is not fully compatible with all browsers, it is recommended to use google chrome, however, it should work with edge and opera as well.
 
